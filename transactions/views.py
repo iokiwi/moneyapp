@@ -4,6 +4,7 @@ from django.views import generic
 from django.db.models import Sum
 from django.http import HttpResponseRedirect
 from django.db import IntegrityError
+from django.contrib import messages
 
 from ofxparse import OfxParser
 
@@ -29,27 +30,37 @@ class StatsView(generic.ListView):
 
 
 def upload(request):
+
+    if request.method == "GET":
+        return render(request, "transactions/upload.html", {})
+
     if request.method == "POST":
+        if request.FILES.get("file") is None:
+            messages.error(request, "No file uploaded")
+            return HttpResponseRedirect(reverse("transactions:upload"))
+
         ofx = OfxParser.parse(request.FILES["file"])
 
         account = ofx.account
-        # print({
-        #     "account_id": account.account_id,
-        #     "account_type": account.account_type,
-        #     "branch_id": account.branch_id,
-        #     "curdef": account.curdef,
-        #     "institution": account.institution,
-        #     "number": account.number,
-        #     "routing_number": account.routing_number,
-        #     #  ,"statement": account.statement
-        #     "type": account.type,
-        #     "warnings": account.warnings,
-        # })
+        print({
+            "account_id": account.account_id,
+            "account_type": account.account_type,
+            "branch_id": account.branch_id,
+            "curdef": account.curdef,
+            "institution": account.institution,
+            "number": account.number,
+            "routing_number": account.routing_number,
+            #  ,"statement": account.statement
+            "type": account.type,
+            "warnings": account.warnings,
+        })
 
         rows_imported = 0
+        duplicate_rows = 0
         for t in ofx.account.statement.transactions:
             try:
                 transaction = Transaction(
+                    # TODO(simonm): Link transaction to bank account
                     payee=t.payee,
                     transaction_type=t.type,
                     date=t.date,
@@ -64,11 +75,11 @@ def upload(request):
                 transaction.save()
                 rows_imported += 1
             except IntegrityError as e:
-                pass
+                duplicate_rows += 1
+                # pass
 
-        print(rows_imported, "/", len(ofx.account.statement.transactions))
-        return HttpResponseRedirect(reverse("transactions:upload", args=""))
-    else:
-        pass
+        messages.success(request, "{}/{} transactions imported. {} duplicate transactions skipped.".format(
+            rows_imported, len(account.statement.transactions), duplicate_rows))
 
-    return render(request, "transactions/upload.html", {})
+        # print(rows_imported, "/", len(ofx.account.statement.transactions))
+        return HttpResponseRedirect(reverse("transactions:upload"))
