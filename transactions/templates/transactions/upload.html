@@ -24,15 +24,15 @@
     {% endif %}
 
     <form action="{% url 'transactions:upload' %}" method="post" enctype="multipart/form-data">
-        <div class="form-group">
         {% csrf_token %}
-        </div>
-        <div class="form-group">
+        <div class="mb-3">
             {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
             <label for="file">File:</label>
             <input class="form-control" type="file" name="file" id="file">
         </div>
-        <button class="btn btn-primary" type="submit">Submit</button>
+        <div class="mb-3">
+            <button class="btn btn-primary" type="submit">Submit</button>
+        </div>
     </form>
 </div>
 

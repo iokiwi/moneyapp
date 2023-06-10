@@ -1,7 +1,7 @@
-import datetime
-from decimal import Decimal
+# import datetime
+# from decimal import Decimal
 from django.db import models
-from django.utils import timezone
+# from django.utils import timezone
 
 import uuid
 
@@ -46,7 +46,6 @@ class Transaction(models.Model):
     class Meta:
         verbose_name = "Transaction"
         verbose_name_plural = "Transactions"
-        # unique_together = ("transaction_id", )
 
     def __str__(self):
         return "Transaction({})".format(self.id)

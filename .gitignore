@@ -2,3 +2,5 @@ venv/
 *.ofx
 *.sqlite3
 __pycache__/
+.env
+opentelemetry.config.yaml

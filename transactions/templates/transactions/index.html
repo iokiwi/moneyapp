@@ -5,6 +5,25 @@
 
 <div class="container">
 
+<div class="row">
+    <div class="col col-xs-12 col-md-6">
+        <table class="table">
+            <tr>
+                <th>Total</th>
+                <td>$ {{ transactions_total|floatformat:2 }}</td>
+            </tr>
+            <tr>
+                <th>Average</th>
+                <td>$ {{ transactions_mean|floatformat:2 }}</td>
+            </tr>
+            <tr>
+                <th>Count</th>
+                <td>{{ transactions_count }}</td>
+            </tr>
+        </table>
+    </div>
+</div>
+
 <table class="table">
     <thead>
     <tr>
@@ -17,11 +36,17 @@
     {% for transaction in transactions %}
     <tr>
         <td>{{ transaction.date|date:"Y-m-d" }}</td>
-        <!-- <td>{{ transaction.transaction_id }}</td> -->
-        <td align="right">{{ transaction.amount }}</td>
-        <td>{{ transaction.payee }}</td>
+        <td style="text-align: right;">{{ transaction.amount|floatformat:2 }}</td>
+        <td><a href="{% url 'transactions:index' %}?payee={{transaction.payee|urlencode}}">{{ transaction.payee }}</a></td>
     </tr>
     {% endfor %}
+    <!-- <tfoot>
+        <tr>
+            <td>Total</td>
+            <td style="text-align: right;">{{ transactions_total|floatformat:2 }}</td>
+            <td></td>
+        </tr>
+    </tfoot> -->
 </table>
 </div>
 

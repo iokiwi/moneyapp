@@ -5,10 +5,18 @@
 
 <div class="container">
     <table class="table">
+        <tr>
+            <th>Total Amount</th>
+            <th>Average Amount</th>
+            <th>Transaction Count</th>
+            <th>Payee</th>
+        </tr>
     {% for result in results %}
         <tr>
           <td>{{ result.total_amount|floatformat:2 }}</td>
-          <td>{{ result.payee }}</td>
+          <td>{{ result.average_amount|floatformat:2 }}</td>
+          <td>{{ result.transaction_count }}</td>
+          <td><a href="{% url 'transactions:index' %}?payee={{result.payee|urlencode}}">{{ result.payee }}</a></td>
         </tr>
     {% endfor %}
     </table>
