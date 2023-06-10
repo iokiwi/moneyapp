@@ -7,6 +7,8 @@ from django.http import HttpResponseRedirect
 from django.db import IntegrityError
 from django.contrib import messages
 
+from django.utils.text import slugify
+
 from ofxparse import OfxParser
 
 from .models import Transaction
@@ -18,7 +20,7 @@ class IndexView(generic.TemplateView):
 
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        transactions = Transaction.objects.all()
+        transactions = Transaction.objects.filter(transaction_type="debit")
 
         if "payee" in self.request.GET:
             transactions = transactions.filter(payee=self.request.GET["payee"])
@@ -28,8 +30,7 @@ class IndexView(generic.TemplateView):
                 payee=self.request.GET["transaction_type"]
             )
 
-        context["transactions"] = transactions.order_by("date")
-
+        context["transactions"] = transactions.order_by("-date")
         context["transactions_total"] = transactions.aggregate(Sum("amount"))[
             "amount__sum"
         ]
@@ -48,9 +49,6 @@ class StatsView(generic.ListView):
     context_object_name = "results"
 
     def get_queryset(self):
-        # return Transaction.objects.values('payee').annotate(total_amount=Sum('amount')).order_by('total_amount')
-        # Get the number of transactions per payee as well as the sum
-
         return (
             Transaction.objects.filter(transaction_type="debit")
             .values("payee")
@@ -63,9 +61,21 @@ class StatsView(generic.ListView):
         )
 
 
+# def match_cluster_group(payee_name):
+#     payee_slug = slugify(payee_name)
+#     print(payee_slug)
+
+#     if payee_slug.startswith("new-world"):
+#         return "new_world"
+#     elif payee_slug.startswith("npd"):
+#         return "npd"
+#     elif payee_slug.startswith("catcld-cld-invs"):
+#         return "catalyst-cloud"
+
+
 def upload(request):
     if request.method == "GET":
-        return render(request, "transactions/upload.html", {})
+        return render(request, "transactions/import.html", {})
 
     if request.method == "POST":
         if request.FILES.get("file") is None:
@@ -75,20 +85,20 @@ def upload(request):
         ofx = OfxParser.parse(request.FILES["file"])
 
         account = ofx.account
-        print(
-            {
-                "account_id": account.account_id,
-                "account_type": account.account_type,
-                "branch_id": account.branch_id,
-                "curdef": account.curdef,
-                "institution": account.institution,
-                "number": account.number,
-                "routing_number": account.routing_number,
-                #  ,"statement": account.statement
-                "type": account.type,
-                "warnings": account.warnings,
-            }
-        )
+        # print(
+        #     {
+        #         "account_id": account.account_id,
+        #         "account_type": account.account_type,
+        #         "branch_id": account.branch_id,
+        #         "curdef": account.curdef,
+        #         "institution": account.institution,
+        #         "number": account.number,
+        #         "routing_number": account.routing_number,
+        #         #  ,"statement": account.statement
+        #         "type": account.type,
+        #         "warnings": account.warnings,
+        #     }
+        # )
 
         rows_imported = 0
         duplicate_rows = 0

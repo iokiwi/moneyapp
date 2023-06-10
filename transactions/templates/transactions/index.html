@@ -5,49 +5,50 @@
 
 <div class="container">
 
-<div class="row">
-    <div class="col col-xs-12 col-md-6">
-        <table class="table">
-            <tr>
-                <th>Total</th>
-                <td>$ {{ transactions_total|floatformat:2 }}</td>
-            </tr>
-            <tr>
-                <th>Average</th>
-                <td>$ {{ transactions_mean|floatformat:2 }}</td>
-            </tr>
-            <tr>
-                <th>Count</th>
-                <td>{{ transactions_count }}</td>
-            </tr>
-        </table>
-    </div>
-</div>
 
-<table class="table">
-    <thead>
-    <tr>
-        <th>User Date</th>
-        <!-- <th>FIT ID</th> -->
-        <th>Amount</th>
-        <th>Name/Payee</th>
-    </tr>
-    </thead>
-    {% for transaction in transactions %}
-    <tr>
-        <td>{{ transaction.date|date:"Y-m-d" }}</td>
-        <td style="text-align: right;">{{ transaction.amount|floatformat:2 }}</td>
-        <td><a href="{% url 'transactions:index' %}?payee={{transaction.payee|urlencode}}">{{ transaction.payee }}</a></td>
-    </tr>
-    {% endfor %}
-    <!-- <tfoot>
+{% if transactions %}
+
+    <div class="row">
+        <div class="col col-xs-12 col-md-6">
+            <table class="table">
+                <tr>
+                    <th>Total</th>
+                    <td>$ {{ transactions_total|floatformat:2 }}</td>
+                </tr>
+                <tr>
+                    <th>Average</th>
+                    <td>$ {{ transactions_mean|floatformat:2 }}</td>
+                </tr>
+                <tr>
+                    <th>Count</th>
+                    <td>{{ transactions_count }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <table class="table">
+        <thead>
         <tr>
-            <td>Total</td>
-            <td style="text-align: right;">{{ transactions_total|floatformat:2 }}</td>
-            <td></td>
+            <th>User Date</th>
+            <!-- <th>FIT ID</th> -->
+            <th>Amount</th>
+            <th>Name/Payee</th>
         </tr>
-    </tfoot> -->
-</table>
+        </thead>
+        {% for transaction in transactions %}
+        <tr>
+            <td>{{ transaction.date|date:"Y-m-d" }}</td>
+            <td style="text-align: right;">{{ transaction.amount|floatformat:2 }}</td>
+            <td><a href="{% url 'transactions:index' %}?payee={{transaction.payee|urlencode}}">{{ transaction.payee }}</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <p style="text-align: center;">You don't have any transactions yet.</p>
+    <a style="text-align: center;" class="btn btn-success" href="{% url 'transactions:import' %}">Import</a>
+{% endif %}
+
 </div>
 
 {% endblock %}

@@ -23,7 +23,12 @@
         {% endfor %}
     {% endif %}
 
-    <form action="{% url 'transactions:upload' %}" method="post" enctype="multipart/form-data">
+
+    <p>
+        Transaction imports are always idempotent. Existing transactions will not be overwritten, updated or duplicated.
+    </p>
+
+    <form action="{% url 'transactions:import' %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="mb-3">
             {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
@@ -31,7 +36,7 @@
             <input class="form-control" type="file" name="file" id="file">
         </div>
         <div class="mb-3">
-            <button class="btn btn-primary" type="submit">Submit</button>
+            <button class="btn btn-primary" type="submit">Import</button>
         </div>
     </form>
 </div>
