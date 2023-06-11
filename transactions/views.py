@@ -7,11 +7,11 @@ from django.http import HttpResponseRedirect
 from django.db import IntegrityError
 from django.contrib import messages
 
-from django.utils.text import slugify
+# from django.utils.text import slugify
 
 from ofxparse import OfxParser
 
-from .models import Transaction
+from .models import Transaction, BankAccount
 
 
 class IndexView(generic.TemplateView):
@@ -20,7 +20,8 @@ class IndexView(generic.TemplateView):
 
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        transactions = Transaction.objects.filter(transaction_type="debit")
+        transactions = Transaction.objects.all()
+            # .filter(transaction_type="debit")
 
         if "payee" in self.request.GET:
             transactions = transactions.filter(payee=self.request.GET["payee"])
@@ -50,7 +51,8 @@ class StatsView(generic.ListView):
 
     def get_queryset(self):
         return (
-            Transaction.objects.filter(transaction_type="debit")
+            Transaction.objects
+            # .filter(transaction_type="debit")
             .values("payee")
             .annotate(
                 total_amount=Sum("amount"),
@@ -59,18 +61,6 @@ class StatsView(generic.ListView):
             )
             .order_by("total_amount")
         )
-
-
-# def match_cluster_group(payee_name):
-#     payee_slug = slugify(payee_name)
-#     print(payee_slug)
-
-#     if payee_slug.startswith("new-world"):
-#         return "new_world"
-#     elif payee_slug.startswith("npd"):
-#         return "npd"
-#     elif payee_slug.startswith("catcld-cld-invs"):
-#         return "catalyst-cloud"
 
 
 def upload(request):
@@ -84,28 +74,23 @@ def upload(request):
 
         ofx = OfxParser.parse(request.FILES["file"])
 
-        account = ofx.account
-        # print(
-        #     {
-        #         "account_id": account.account_id,
-        #         "account_type": account.account_type,
-        #         "branch_id": account.branch_id,
-        #         "curdef": account.curdef,
-        #         "institution": account.institution,
-        #         "number": account.number,
-        #         "routing_number": account.routing_number,
-        #         #  ,"statement": account.statement
-        #         "type": account.type,
-        #         "warnings": account.warnings,
-        #     }
-        # )
+        try:
+            account = BankAccount.objects.get(account_id=ofx.account.account_id)
+        except BankAccount.DoesNotExist:
+            account = BankAccount(
+                account_id=ofx.account.account_id,
+                account_type=ofx.account.account_type,
+            )
+            account.save()
+
+        print(account)
 
         rows_imported = 0
-        duplicate_rows = 0
+        skipped_rows = 0
         for t in ofx.account.statement.transactions:
             try:
                 transaction = Transaction(
-                    # TODO(simonm): Link transaction to bank account
+                    account=account,
                     payee=t.payee,
                     transaction_type=t.type,
                     date=t.date,
@@ -117,15 +102,16 @@ def upload(request):
                     mcc=t.mcc,
                     checknum=t.checknum,
                 )
+                # print(transaction)
                 transaction.save()
                 rows_imported += 1
-            except IntegrityError as e:
-                duplicate_rows += 1
+            except IntegrityError:
+                skipped_rows += 1
 
         messages.success(
             request,
             "{}/{} transactions imported. {} duplicate transactions skipped.".format(
-                rows_imported, len(account.statement.transactions), duplicate_rows
+                rows_imported, len(ofx.account.statement.transactions), skipped_rows
             ),
         )
 

@@ -13,6 +13,6 @@ class TransactionsConfig(AppConfig):
             writekey=settings.HONEYCOMB_API_KEY,
             dataset=settings.HONEYCOMB_DATASET,
             service_name="moneyapp",
-            debug=True,
+            debug=False,
             send_frequency=1,
         )

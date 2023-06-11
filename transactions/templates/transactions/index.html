@@ -30,8 +30,8 @@
     <table class="table">
         <thead>
         <tr>
-            <th>User Date</th>
-            <!-- <th>FIT ID</th> -->
+            <th>Date</th>
+            <th>Account</th>
             <th>Amount</th>
             <th>Name/Payee</th>
         </tr>
@@ -39,8 +39,10 @@
         {% for transaction in transactions %}
         <tr>
             <td>{{ transaction.date|date:"Y-m-d" }}</td>
+            <td>{{ transaction.account.account_name }}</td>
             <td style="text-align: right;">{{ transaction.amount|floatformat:2 }}</td>
             <td><a href="{% url 'transactions:index' %}?payee={{transaction.payee|urlencode}}">{{ transaction.payee }}</a></td>
+            <!-- <td><a href="{% url 'transactions:index' %}?payee={{transaction.payee|urlencode}}">{{ transaction.transaction_type }}</a></td> -->
         </tr>
         {% endfor %}
     </table>

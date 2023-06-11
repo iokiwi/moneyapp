@@ -33,8 +33,8 @@ DEBUG = bool(os.environ.get("DEBUG", False))
 
 ALLOWED_HOSTS = []
 
-HONEYCOMB_API_KEY=os.environ['HONEYCOMB_API_KEY']
-HONEYCOMB_DATASET=os.environ['HONEYCOMB_DATASET']
+HONEYCOMB_API_KEY = os.environ['HONEYCOMB_API_KEY']
+HONEYCOMB_DATASET = os.environ['HONEYCOMB_DATASET']
 
 
 # Application definition
