@@ -11,7 +11,8 @@ from django.contrib import messages
 
 from ofxparse import OfxParser
 
-from .models import Transaction, BankAccount
+from .models import Transaction
+from accounts.models import BankAccount
 
 
 class IndexView(generic.TemplateView):

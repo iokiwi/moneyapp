@@ -40,6 +40,7 @@ HONEYCOMB_DATASET = os.environ['HONEYCOMB_DATASET']
 # Application definition
 INSTALLED_APPS = [
     'moneyapp',
+    'accounts.apps.AccountsConfig',
     'transactions.apps.TransactionsConfig',
     'django.contrib.admin',
     'django.contrib.auth',

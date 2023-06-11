@@ -34,14 +34,16 @@
             <th>Account</th>
             <th>Amount</th>
             <th>Name/Payee</th>
+            <th>Memo</th>
         </tr>
         </thead>
         {% for transaction in transactions %}
         <tr>
             <td>{{ transaction.date|date:"Y-m-d" }}</td>
-            <td>{{ transaction.account.account_name }}</td>
+            <td>{{ transaction.account.name }}</td>
             <td style="text-align: right;">{{ transaction.amount|floatformat:2 }}</td>
             <td><a href="{% url 'transactions:index' %}?payee={{transaction.payee|urlencode}}">{{ transaction.payee }}</a></td>
+            <td>{{ transaction.memo }}</td>
             <!-- <td><a href="{% url 'transactions:index' %}?payee={{transaction.payee|urlencode}}">{{ transaction.transaction_type }}</a></td> -->
         </tr>
         {% endfor %}
