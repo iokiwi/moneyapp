@@ -7,7 +7,6 @@
 
 
 {% if transactions %}
-
     <div class="row">
         <div class="col col-xs-12 col-md-6">
             <table class="table">
@@ -26,7 +25,6 @@
             </table>
         </div>
     </div>
-
     <table class="table">
         <thead>
         <tr>
@@ -40,7 +38,7 @@
         {% for transaction in transactions %}
         <tr>
             <td>{{ transaction.date|date:"Y-m-d" }}</td>
-            <td>{{ transaction.account.name }}</td>
+            <td><a href="{% url 'transactions:index' %}?account={{transaction.account.id|urlencode}}">{{ transaction.account.name }}</a></td>
             <td style="text-align: right;">{{ transaction.amount|floatformat:2 }}</td>
             <td><a href="{% url 'transactions:index' %}?payee={{transaction.payee|urlencode}}">{{ transaction.payee }}</a></td>
             <td>{{ transaction.memo }}</td>

@@ -22,14 +22,18 @@ class IndexView(generic.TemplateView):
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
         transactions = Transaction.objects.all()
-            # .filter(transaction_type="debit")
 
         if "payee" in self.request.GET:
             transactions = transactions.filter(payee=self.request.GET["payee"])
 
         if "transaction_type" in self.request.GET:
             transactions = transactions.filter(
-                payee=self.request.GET["transaction_type"]
+                transaction_type=self.request.GET["transaction_type"]
+            )
+
+        if "account" in self.request.GET:
+            transactions = transactions.filter(
+                account__id=self.request.GET["account"]
             )
 
         context["transactions"] = transactions.order_by("-date")
