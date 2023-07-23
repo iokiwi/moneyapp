@@ -1,0 +1,68 @@
+{% extends "moneyapp/base.html" %}
+
+
+{% block content %}
+
+
+<div class="container">
+
+    <h1>New Recurring Payment</h1>
+
+    {% if messages %}
+        {% for message in messages %}
+            {% if 'error' in message.tags %}
+                <div class="alert alert-danger" role="alert">
+                    {{ message }}
+                </div>
+            {% endif %}
+            {% if 'success' in message.tags %}
+                <div class="alert alert-success" role="alert">
+                    {{ message }}
+                </div>
+            {% endif %}
+            {% if 'info' in message.tags %}
+            <div class="alert alert-info" role="alert">
+                {{ message }}
+            </div>
+        {% endif %}
+        {% endfor %}
+    {% endif %}
+
+    <form action="{% url 'recurring_expenses:new' %}" method="post">
+        {% csrf_token %}
+        <div class="mb-3 row">
+            <label for="" class="col-sm-2 col-form-label">Particulars</label>
+            <div class="col-sm-10">
+                <input type="text" name="particulars" class="form-control" id="" placeholder="Netflix">
+            </div>
+        </div>
+
+        <div class="mb-3 row">
+            <label for="" class="col-sm-2 col-form-label">Amount</label>
+            <div class="col-sm-10">
+                <input type="text" name="amount" class="form-control" id="" placeholder="17.99">
+            </div>
+        </div>
+
+        <div class="mb-3 row">
+            <label for="" class="col-sm-2 col-form-label">Currency (Default NZD)</label>
+            <div class="col-sm-10">
+                <input type="text" name="currency" class="form-control" id="" placeholder="NZD">
+            </div>
+        </div>
+
+        <div class="mb-3 row">
+            <label for="" class="col-sm-2 col-form-label">Period (Months)</label>
+            <div class="col-sm-10">
+                <input type="text" name="period" class="form-control" id="" placeholder="1">
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <button class="btn btn-success" type="submit">Create</button>
+        </div>
+    </form>
+
+</div>
+
+{% endblock %}

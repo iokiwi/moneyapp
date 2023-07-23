@@ -1,6 +1,7 @@
 from typing import Any, Dict
 from django.shortcuts import render
 from django.urls import reverse
+from django.utils.text import slugify
 from django.views import generic
 from django.db.models import Sum, Count, Avg
 from django.http import HttpResponseRedirect
@@ -12,7 +13,7 @@ from django.contrib import messages
 from ofxparse import OfxParser
 
 from .models import Transaction
-from accounts.models import BankAccount
+from bank_accounts.models import BankAccount
 
 
 class IndexView(generic.TemplateView):
@@ -36,7 +37,6 @@ class IndexView(generic.TemplateView):
                 account__id=self.request.GET["account"]
             )
 
-        context["transactions"] = transactions.order_by("-date")
         context["transactions_total"] = transactions.aggregate(Sum("amount"))[
             "amount__sum"
         ]
@@ -46,7 +46,7 @@ class IndexView(generic.TemplateView):
         context["transactions_count"] = transactions.aggregate(Count("amount"))[
             "amount__count"
         ]
-
+        context["transactions"] = transactions.order_by("-date")
         return context
 
 
@@ -57,7 +57,7 @@ class StatsView(generic.ListView):
     def get_queryset(self):
         return (
             Transaction.objects
-            # .filter(transaction_type="debit")
+            .filter(transaction_type="debit")
             .values("payee")
             .annotate(
                 total_amount=Sum("amount"),
@@ -88,8 +88,6 @@ def upload(request):
             )
             account.save()
 
-        print(account)
-
         rows_imported = 0
         skipped_rows = 0
         for t in ofx.account.statement.transactions:
@@ -97,6 +95,7 @@ def upload(request):
                 transaction = Transaction(
                     account=account,
                     payee=t.payee,
+                    payee_slug=slugify(t.payee),
                     transaction_type=t.type,
                     date=t.date,
                     user_date=t.user_date,
@@ -120,5 +119,4 @@ def upload(request):
             ),
         )
 
-        # print(rows_imported, "/", len(ofx.account.statement.transactions))
         return HttpResponseRedirect(reverse("transactions:import"))

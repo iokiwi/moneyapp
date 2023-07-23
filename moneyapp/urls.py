@@ -18,8 +18,10 @@ from django.contrib import admin
 from django.urls import path
 from django.urls import include
 
+
 urlpatterns = [
     path('', include('transactions.urls'), name="home"),
-    path('accounts/', include('accounts.urls')),
+    path('recurring_expenses/', include('recurring_expenses.urls'), name="recurring_expenses"),
+    path('bank_accounts/', include('bank_accounts.urls'), name="bank_accounts"),
     path('admin/', admin.site.urls),
 ]

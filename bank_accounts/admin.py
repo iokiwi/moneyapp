@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from accounts.models import BankAccount
+from bank_accounts.models import BankAccount
 
 
 # Register your models here.

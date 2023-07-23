@@ -1,0 +1,39 @@
+{% extends "moneyapp/base.html" %}
+
+
+{% block content %}
+
+<div class="container">
+
+
+
+    <h1>Recurring Expenses</h1>
+
+    {% if recurring_expenses %}
+        <a href="{% url 'recurring_expenses:new' %}" class="btn btn-success">Add New</a>
+    {% else %}
+        <p style="text-align: center;">You don't have any recurring expenses yet.</p>
+    {% endif %}
+
+    <!-- <a href="{% url 'recurring_expenses:new' %}" class="btn btn-success">Add New</a> -->
+
+    <table class="table">
+        <tr>
+            <th>Particulars</th>
+            <th>Amount NZD</th>
+            <th>Currency</th>
+            <th>Period (Months)</th>
+        </tr>
+    {% for expense in recurring_expenses %}
+        <tr>
+          <td>{{ expense.particulars }}</td>
+          <td>{{ expense.amount|floatformat:2 }}</td>
+          <td>{{ expense.currency }}</td>
+          <td>{{ expense.period }}</td>
+          <td><a href="{% url 'transactions:index' %}?payee={{result.payee|urlencode}}">{{ result.payee }}</a></td>
+        </tr>
+    {% endfor %}
+    </table>
+    <a href="{% url 'recurring_expenses:new' %}" class="btn btn-success">Add New</a>
+</div>
+{% endblock %}
