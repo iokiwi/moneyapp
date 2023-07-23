@@ -5,35 +5,55 @@
 
 <div class="container">
 
-
-
     <h1>Recurring Expenses</h1>
 
-    {% if recurring_expenses %}
-        <a href="{% url 'recurring_expenses:new' %}" class="btn btn-success">Add New</a>
+    <!-- 
+    <form>
+        <div class="row">
+            <div class="col-sm-4">
+                <input type="text" class="form-control" placeholder="Particulars" name="particulars">
+            </div>
+            <div class="col-sm-2">
+                <input type="text" class="form-control" placeholder="Amount" name="amount">
+            </div>
+            <div class="col-sm-2">
+                <input type="text" class="form-control" placeholder="NZD" name="currency">
+            </div>
+            <div class="col-sm-2">
+                <input type="text" class="form-control" placeholder="1" name="period">
+            </div>
+            <div class="col-sm-2">
+                <button type="submit" class="btn btn-success">Add</button>
+            </div>
+        </div>
+    </form> -->
+
+    {% if not recurring_expenses %}
+        <p style="text-align: center;">Add some recurring expenses to get started</p>
     {% else %}
-        <p style="text-align: center;">You don't have any recurring expenses yet.</p>
-    {% endif %}
 
     <!-- <a href="{% url 'recurring_expenses:new' %}" class="btn btn-success">Add New</a> -->
+        <table class="table">
+            <tr>
+                <th>Particulars</th>
+                <th>Amount NZD</th>
+                <th>Currency</th>
+                <th>Period (Months)</th>
+            </tr>
+        {% for expense in recurring_expenses %}
+            <tr>
+                <td>{{ expense.particulars }}</td>
+                <td>{{ expense.amount|floatformat:2 }}</td>
+                <td>{{ expense.currency }}</td>
+                <td>{{ expense.period }}</td>
+                <td><a href="{% url 'transactions:index' %}?payee={{result.payee|urlencode}}">{{ result.payee }}</a></td>
+            </tr>
+        {% endfor %}
+        </table>
+        <a href="{% url 'recurring_expenses:new' %}" class="btn btn-success">Add New</a>
+    {% endif %}
 
-    <table class="table">
-        <tr>
-            <th>Particulars</th>
-            <th>Amount NZD</th>
-            <th>Currency</th>
-            <th>Period (Months)</th>
-        </tr>
-    {% for expense in recurring_expenses %}
-        <tr>
-          <td>{{ expense.particulars }}</td>
-          <td>{{ expense.amount|floatformat:2 }}</td>
-          <td>{{ expense.currency }}</td>
-          <td>{{ expense.period }}</td>
-          <td><a href="{% url 'transactions:index' %}?payee={{result.payee|urlencode}}">{{ result.payee }}</a></td>
-        </tr>
-    {% endfor %}
-    </table>
-    <a href="{% url 'recurring_expenses:new' %}" class="btn btn-success">Add New</a>
 </div>
+
+
 {% endblock %}

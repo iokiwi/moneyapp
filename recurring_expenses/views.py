@@ -39,8 +39,10 @@ class CreateView(View):
         return render(request, 'recurring_expenses/new.html')
 
     def post(self, request, *args, **kwargs):
+        print(request.POST)
         try:
             recurring_expense = RecurringExpense(
+                # active = request.POST["active"],
                 particulars=request.POST["particulars"],
                 currency=request.POST["currency"],
                 amount=request.POST["amount"],
