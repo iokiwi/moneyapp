@@ -1,13 +1,12 @@
 {% extends "moneyapp/base.html" %}
 
+
 {% block content %}
 
 
 <div class="container">
-
-    <h1>New Recurring Payment</h1>
-
-    <form action="{% url 'recurring_expenses:new' %}" method="post">
+    <h1>Edit Recurring Payment</h1>
+    <form action="{% url 'recurring_expenses:edit' expense_id %}" method="POST">
         {% include "recurring_expenses/_form.html" %}
     </form>
 

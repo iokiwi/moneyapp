@@ -1,0 +1,50 @@
+<!-- {% extends "recurring_expenses/new.html" %} -->
+
+{% block content %}
+
+{% csrf_token %}
+{{ form.non_field_errors }}
+
+<div class="mb-3 row">
+    {{ form.particulars.errors }}
+    <label for="{{ form.particulars.id_for_label }}" class="col-sm-2 col-form-label">Particulars</label>
+    <div class="col-sm-10">
+        {{ form.particulars }}
+    </div>
+</div>
+
+<div class="mb-3 row">
+    {{ form.amount.errors }}
+    <label for="{{ form.particulars.id_for_label }}" class="col-sm-2 col-form-label">Amount</label>
+    <div class="col-sm-10">
+        <div class="input-group">
+            <span class="input-group-text">$</span>
+            {{ form.amount }}
+        </div>
+    </div>
+</div>
+
+<div class="mb-3 row">
+    {{ form.currency.errors }}
+    <label for="{{ form.currency.id_for_label }}" class="col-sm-2 col-form-label">Currency</label>
+    <div class="col-sm-10">
+        {{ form.currency }}
+    </div>
+</div>
+
+<div class="mb-3 row">
+    {{ form.period.errors }}
+    <label for="{{ form.period.id_for_label }}" class="col-sm-2 col-form-label">Period</label>
+    <div class="col-sm-10">
+        {{ form.period }}
+    </div>
+</div>
+
+<div class="mb-3 form-check">
+    {{ form.active }}
+    <label class="form-check-label" for="{{ form.active.id_for_label }}">Active</label>
+</div>
+
+<input type="submit" class="btn btn-success" value="Submit">
+
+{% endblock %}

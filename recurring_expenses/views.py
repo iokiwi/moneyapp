@@ -2,12 +2,53 @@ from django.shortcuts import render
 from django.views import generic
 from .models import RecurringExpense
 
-from django.http import HttpResponse, HttpResponseRedirect
+# from django.http import HttpResponse,
+from django.http import HttpResponseRedirect
 from django.views import View
 from django.shortcuts import render
-from django.contrib import messages
-
+# from django.contrib import messages
 from django.urls import reverse
+
+
+from .forms import RecurringExpenseForm
+
+
+def delete_recurring_payment(request, expense_id):
+    # if request.method == "GET":
+    recurring_expense = RecurringExpense.objects.get(pk=expense_id)
+    recurring_expense.delete()
+    return HttpResponseRedirect(reverse("recurring_expenses:index"))
+
+
+def create_or_edit_recurring_payment(request, expense_id=None):
+    if expense_id is None:
+        create_recurring_payment(request)
+    else:
+        edit_recurring_payment(request, expense_id=expense_id)
+
+
+def edit_recurring_payment(request, expense_id):
+    recurring_expense = RecurringExpense.objects.get(pk=expense_id)
+    if request.method == "POST":
+        form = RecurringExpenseForm(request.POST, instance=recurring_expense)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse("recurring_expenses:index"))
+    elif request.method == "GET":
+        form = RecurringExpenseForm(instance=recurring_expense)
+        return render(request, "recurring_expenses/edit.html", {"form": form, "expense_id": expense_id})
+
+
+def create_recurring_payment(request):
+    if request.method == "POST":
+        form = RecurringExpenseForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse("recurring_expenses:index"))
+    elif request.method == "GET":
+        form = RecurringExpenseForm()
+
+    return render(request, "recurring_expenses/new.html", {"form": form})
 
 
 class IndexView(generic.TemplateView):

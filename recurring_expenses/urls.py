@@ -4,9 +4,8 @@ from . import views
 app_name = "recurring_expenses"
 
 urlpatterns = [
-    # path("stats", views.StatsView.as_view(), name="stats"),
     path("", views.IndexView.as_view(), name="index"),
-    path("new/", views.CreateView.as_view(), name="new"),
-
-    # path("import", views.upload, name="import"),
+    path("new/", views.create_recurring_payment, name="new"),
+    path("<uuid:expense_id>/edit", views.edit_recurring_payment, name="edit"),
+    path("<uuid:expense_id>/delete", views.delete_recurring_payment, name="delete"),
 ]

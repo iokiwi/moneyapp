@@ -7,7 +7,7 @@
 
     <h1>Recurring Expenses</h1>
 
-    <!-- 
+    <!--
     <form>
         <div class="row">
             <div class="col-sm-4">
@@ -26,19 +26,21 @@
                 <button type="submit" class="btn btn-success">Add</button>
             </div>
         </div>
-    </form> -->
+    </form>
+    -->
 
     {% if not recurring_expenses %}
         <p style="text-align: center;">Add some recurring expenses to get started</p>
     {% else %}
 
-    <!-- <a href="{% url 'recurring_expenses:new' %}" class="btn btn-success">Add New</a> -->
         <table class="table">
             <tr>
                 <th>Particulars</th>
-                <th>Amount NZD</th>
+                <th>Amount</th>
                 <th>Currency</th>
                 <th>Period (Months)</th>
+                <th></th>
+                <th></th>
             </tr>
         {% for expense in recurring_expenses %}
             <tr>
@@ -46,7 +48,12 @@
                 <td>{{ expense.amount|floatformat:2 }}</td>
                 <td>{{ expense.currency }}</td>
                 <td>{{ expense.period }}</td>
-                <td><a href="{% url 'transactions:index' %}?payee={{result.payee|urlencode}}">{{ result.payee }}</a></td>
+                <td>
+                    <a href="{% url 'recurring_expenses:edit' expense.id %}"><i class="bi bi-pencil"></i></a>
+                </td>
+                <td>
+                    <a href="{% url 'recurring_expenses:delete' expense.id %}"><i class="bi bi-x-circle"></i></a>
+                </td>
             </tr>
         {% endfor %}
         </table>
@@ -54,6 +61,10 @@
     {% endif %}
 
 </div>
+
+<!-- <script>
+
+</script> -->
 
 
 {% endblock %}
