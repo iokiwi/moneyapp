@@ -13,21 +13,21 @@ from django.urls import reverse
 from .forms import RecurringExpenseForm
 
 
-def delete_recurring_payment(request, expense_id):
+def delete_recurring_expense(request, expense_id):
     # if request.method == "GET":
     recurring_expense = RecurringExpense.objects.get(pk=expense_id)
     recurring_expense.delete()
     return HttpResponseRedirect(reverse("recurring_expenses:index"))
 
 
-def create_or_edit_recurring_payment(request, expense_id=None):
+def create_or_edit_recurring_expense(request, expense_id=None):
     if expense_id is None:
-        create_recurring_payment(request)
+        create_recurring_expense(request)
     else:
-        edit_recurring_payment(request, expense_id=expense_id)
+        edit_recurring_expense(request, expense_id=expense_id)
 
 
-def edit_recurring_payment(request, expense_id):
+def edit_recurring_expense(request, expense_id):
     recurring_expense = RecurringExpense.objects.get(pk=expense_id)
     if request.method == "POST":
         form = RecurringExpenseForm(request.POST, instance=recurring_expense)
@@ -39,7 +39,7 @@ def edit_recurring_payment(request, expense_id):
         return render(request, "recurring_expenses/edit.html", {"form": form, "expense_id": expense_id})
 
 
-def create_recurring_payment(request):
+def create_recurring_expense(request):
     if request.method == "POST":
         form = RecurringExpenseForm(request.POST)
         if form.is_valid():
