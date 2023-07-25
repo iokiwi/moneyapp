@@ -9,3 +9,4 @@ Export*.ofx
 Export*.csv
 
 script.py
+.env
