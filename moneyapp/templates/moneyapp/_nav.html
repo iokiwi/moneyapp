@@ -17,11 +17,18 @@
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="{% url 'bank_accounts:index' %}">Accounts</a>
+                    <a class="nav-link active" aria-current="page" href="{% url 'recurring_expenses:index' %}">Accounts</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="{% url 'recurring_expenses:index' %}" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Recurring Expenses</a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="{% url 'recurring_expenses:index' %}">Recurring Expenses</a></li>
+                        <li><a class="dropdown-item" href="{% url 'recurring_expenses:import' %}">Import</a></li>
+                    </ul>
+                </li>
+                <!-- <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="{% url 'recurring_expenses:index' %}">Recurring Expenses</a>
-                </li>
+                </li> -->
             </ul>
             <!--
             <form class="d-flex" role="search">

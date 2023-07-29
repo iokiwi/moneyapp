@@ -1,0 +1,42 @@
+{% extends "moneyapp/base.html" %}
+
+{% block content %}
+
+<div class="container">
+
+    {% if messages %}
+        {% for message in messages %}
+            {% if 'error' in message.tags %}
+                <div class="alert alert-danger" role="alert">
+                    {{ message }}
+                </div>
+            {% endif %}
+            {% if 'success' in message.tags %}
+                <div class="alert alert-success" role="alert">
+                    {{ message }}
+                </div>
+            {% endif %}
+            {% if 'info' in message.tags %}
+            <div class="alert alert-info" role="alert">
+                {{ message }}
+            </div>
+        {% endif %}
+        {% endfor %}
+    {% endif %}
+
+    <h1>Import Recurring Expenses</h1>
+
+    <form action="{% url 'recurring_expenses:import' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="file">File:</label>
+            <input class="form-control" type="file" name="file" id="file">
+        </div>
+        <div class="mb-3">
+            <button class="btn btn-primary" type="submit">Import</button>
+        </div>
+    </form>
+
+</div>
+
+{% endblock %}

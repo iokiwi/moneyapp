@@ -1,20 +1,17 @@
+import csv
+
 from django.shortcuts import render
 from django.views import generic
-from .models import RecurringExpense
-
-# from django.http import HttpResponse,
 from django.http import HttpResponseRedirect
 from django.views import View
-from django.shortcuts import render
-# from django.contrib import messages
+from django.contrib import messages
 from django.urls import reverse
 
-
+from .models import RecurringExpense
 from .forms import RecurringExpenseForm
 
 
 def delete_recurring_expense(request, expense_id):
-    # if request.method == "GET":
     recurring_expense = RecurringExpense.objects.get(pk=expense_id)
     recurring_expense.delete()
     return HttpResponseRedirect(reverse("recurring_expenses:index"))
@@ -27,6 +24,62 @@ def create_or_edit_recurring_expense(request, expense_id=None):
         edit_recurring_expense(request, expense_id=expense_id)
 
 
+def parse_bool(s):
+    if s.lower() == 'true':
+        return True
+    if s.lower() == 'false':
+        return False
+    raise ValueError("Cannot parse boolean from {}".format(s))
+
+
+def import_recurring_expenses(request):
+    if request.method == "GET":
+        return render(request, "recurring_expenses/import.html", {})
+    if request.method == "POST":
+
+        uploaded_file = request.FILES.get("file")
+
+        if uploaded_file is None:
+            messages.error(request, "No file uploaded")
+            return HttpResponseRedirect(reverse("recurring_expenses:import"))
+
+        f = uploaded_file.read().decode("utf-8")
+        reader = csv.reader(f.splitlines(), delimiter=",")
+        next(reader, None)  # skip the headers
+
+        rows_imported = 0
+        rows_errored = 0
+        total_rows = 0
+
+        for row in reader:
+            if row[0].strip(" ").lower() == "totals":
+                break
+
+            total_rows += 1
+
+            try:
+                recurring_expense = RecurringExpense(
+                    active=parse_bool(row[2]),
+                    particulars=row[3].strip(" "),
+                    amount=row[4].strip("$  "),
+                    period=int(row[5]),
+                    currency=row[6].strip(" "),
+                )
+                recurring_expense.save()
+                rows_imported += 1
+            except Exception as e:
+                print(e)
+                rows_errored += 1
+
+        messages.success(
+            request,
+            "{}/{} Recurring expenses imported successfully. {} skipped".format(
+                rows_imported, total_rows, rows_errored
+            ))
+
+        return HttpResponseRedirect(reverse("recurring_expenses:import"))
+
+
 def edit_recurring_expense(request, expense_id):
     recurring_expense = RecurringExpense.objects.get(pk=expense_id)
     if request.method == "POST":
@@ -36,7 +89,11 @@ def edit_recurring_expense(request, expense_id):
             return HttpResponseRedirect(reverse("recurring_expenses:index"))
     elif request.method == "GET":
         form = RecurringExpenseForm(instance=recurring_expense)
-        return render(request, "recurring_expenses/edit.html", {"form": form, "expense_id": expense_id})
+        return render(
+            request,
+            "recurring_expenses/edit.html",
+            {"form": form, "expense_id": expense_id},
+        )
 
 
 def create_recurring_expense(request):
@@ -52,7 +109,6 @@ def create_recurring_expense(request):
 
 
 class IndexView(generic.TemplateView):
-
     template_name = "recurring_expenses/index.html"
 
     def get_context_data(self, **kwargs):
@@ -62,7 +118,6 @@ class IndexView(generic.TemplateView):
 
 
 class DetailsView(generic.TemplateView):
-
     template_name = "recurring_expenses/detail.html"
 
     def get_context_data(self, **kwargs):
@@ -73,11 +128,10 @@ class DetailsView(generic.TemplateView):
 
 # Create your views here.
 class CreateView(View):
-
     template_name = "recurring_expenses/new.html"
 
     def get(self, request, *args, **kwargs):
-        return render(request, 'recurring_expenses/new.html')
+        return render(request, "recurring_expenses/new.html")
 
     def post(self, request, *args, **kwargs):
         print(request.POST)
@@ -87,13 +141,12 @@ class CreateView(View):
                 particulars=request.POST["particulars"],
                 currency=request.POST["currency"],
                 amount=request.POST["amount"],
-                period=request.POST["period"]
+                period=request.POST["period"],
             )
             recurring_expense.save()
             # return HttpResponseRedirect(
             #     reverse('recurring_expenses:index', args=(recurring_expense.id,)))
-            return HttpResponseRedirect(
-                reverse('recurring_expenses:index'))
+            return HttpResponseRedirect(reverse("recurring_expenses:index"))
         except Exception as e:
             print(e)
 

@@ -35,6 +35,7 @@
 
         <table class="table">
             <tr>
+                <th>Active</th>
                 <th>Particulars</th>
                 <th>Amount</th>
                 <th>Currency</th>
@@ -43,7 +44,12 @@
                 <th></th>
             </tr>
         {% for expense in recurring_expenses %}
-            <tr>
+            {% if expense.active == False %}
+                <tr style="color: darkgrey; background-color: lightgrey;">
+            {% else %}
+                <tr>
+            {% endif %}
+                <td>{{ expense.active }}</td>
                 <td>{{ expense.particulars }}</td>
                 <td>{{ expense.amount|floatformat:2 }}</td>
                 <td>{{ expense.currency }}</td>
