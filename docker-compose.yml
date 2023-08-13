@@ -12,6 +12,8 @@ services:
       DB_PASSWORD: password
       DB_PORT: 3306
       DB_HOST: db
+    depends_on:
+      - db
 
   db:
     image: mysql:latest
