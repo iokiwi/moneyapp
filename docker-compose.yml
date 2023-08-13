@@ -1,0 +1,27 @@
+version: '3.11'
+
+services:
+  app:
+    build: .
+    ports:
+      - 8000:8000
+    environment:
+      DB_ENGINE: mysql
+      DB_DATABASE: moneyapp
+      DB_USERNAME: user
+      DB_PASSWORD: password
+      DB_PORT: 3306
+      DB_HOST: db
+
+  db:
+    image: mysql:latest
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: moneyapp
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      MYSQL_RANDOM_ROOT_PASSWORD: '1'
+
+volumes:
+  db: {}
