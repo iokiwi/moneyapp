@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+
 load_dotenv()
 
 
@@ -27,6 +28,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ["SECRET_KEY"]
 
+OTEL_EXPORTER = os.environ.get("OPEN_TELEMETRY_EXPORTER", "console")
+OTEL_SERVICE_NAME = os.environ.get("OTEL_SERVICE_NAME", "moneyapp-dev")
+OTEL_OTLP_ENDPOINT = os.environ.get("OTEL_OTLP_ENDPOINT", "http://localhost:4317")
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(os.environ.get("DEBUG", False))
 
@@ -37,7 +42,6 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     # 'allauth.socialaccount',
-
     'moneyapp',
     'telemetry.apps.TelemetryConfig',
     'bank_accounts.apps.BankAccountsConfig',
@@ -117,7 +121,7 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator', # noqa
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',  # noqa
     },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
@@ -152,5 +156,3 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-OTEL_EXPORTER = os.environ.get("OPEN_TELEMETRY_EXPORTER", "console")

@@ -14,19 +14,23 @@ class TelemetryConfig(AppConfig):
     def ready(self) -> None:
         # return super().ready()
 
-        resource = Resource(attributes={SERVICE_NAME: "moneyapp-dev"})
+        resource = Resource(attributes={SERVICE_NAME: settings.OTEL_SERVICE_NAME})
         trace.set_tracer_provider(TracerProvider(resource=resource))
 
         if settings.OTEL_EXPORTER == "collector":
-            from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
+            from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import (
+                OTLPSpanExporter,
+            )
+
             otlp_exporter = OTLPSpanExporter(
-                endpoint="http://localhost:4317",
+                endpoint=settings.OTEL_EXPORTER_ENDPOINT,
                 # credentials=ChannelCredentials(credentials),
                 # headers=(("metadata","value")),
             )
             span_processor = BatchSpanProcessor(otlp_exporter)
         elif settings.OTEL_EXPORTER == "console":
             from opentelemetry.sdk.trace.export import ConsoleSpanExporter
+
             span_processor = BatchSpanProcessor(ConsoleSpanExporter())
 
         trace.get_tracer_provider().add_span_processor(span_processor)
