@@ -5,20 +5,26 @@
 
 <div class="container">
 
-        <div class="row">
-            {% for account in bank_accounts %}
-            <div class="col">
-                <div class="card">
-                    <!-- <img src="..." class="card-img-top" alt="..."> -->
-                    <div class="card-body">
-                        <b><p class="card-text">{{ account.name }}</p></b>
-                        <p class="card-text">{{ account.description }}</p>
-                        <a class="btn btn-primary" href="{% url 'transactions:index' %}?account={{account.id|urlencode}}">Transactions</a>
-                    </div>
+    <div class="row">
+    {% if bank_accounts %}
+        {% for account in bank_accounts %}
+        <div class="col">
+            <div class="card">
+                <!-- <img src="..." class="card-img-top" alt="..."> -->
+                <div class="card-body">
+                    <b><p class="card-text">{{ account.name }}</p></b>
+                    <p class="card-text">{{ account.description }}</p>
+                    <a class="btn btn-primary" href="{% url 'transactions:index' %}?account={{account.id|urlencode}}">Transactions</a>
                 </div>
             </div>
-            {% endfor %}
         </div>
+        {% endfor %}
+    {% else %}
+        <div class="col">
+            No accounts yet.
+        </div>
+    {% endif %}
+    </div>
 
 </div>
 

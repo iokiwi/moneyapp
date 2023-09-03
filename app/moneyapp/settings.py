@@ -32,12 +32,14 @@ DEBUG = bool(os.environ.get("DEBUG", False))
 
 ALLOWED_HOSTS = ["*"]
 
-HONEYCOMB_API_KEY = os.environ.get('HONEYCOMB_API_KEY')
-HONEYCOMB_DATASET = os.environ.get('HONEYCOMB_DATASET')
-
 # Application definition
 INSTALLED_APPS = [
+    'allauth',
+    'allauth.account',
+    # 'allauth.socialaccount',
+
     'moneyapp',
+    'telemetry.apps.TelemetryConfig',
     'bank_accounts.apps.BankAccountsConfig',
     'recurring_expenses.apps.RecurringExpensesConfig',
     'transactions.apps.TransactionsConfig',
@@ -49,8 +51,14 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 ]
 
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+    # `allauth` specific authentication methods, such as login by email
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
 MIDDLEWARE = [
-    # 'beeline.middleware.django.HoneyMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -58,7 +66,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # "allauth.account.middleware.AccountMiddleware",
 ]
+
+SOCIALACCOUNT_PROVIDERS = {}
 
 ROOT_URLCONF = 'moneyapp.urls'
 
@@ -143,28 +154,3 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 OTEL_EXPORTER = os.environ.get("OPEN_TELEMETRY_EXPORTER", "console")
-
-
-
-# TODO: This should be in a separate file
-from opentelemetry import trace
-from opentelemetry.sdk.resources import Resource, SERVICE_NAME
-from opentelemetry.sdk.trace import TracerProvider
-from opentelemetry.sdk.trace.export import BatchSpanProcessor
-
-resource = Resource(attributes={SERVICE_NAME: "moneyapp-dev"})
-trace.set_tracer_provider(TracerProvider(resource=resource))
-
-if OTEL_EXPORTER == "collector":
-    from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
-    otlp_exporter = OTLPSpanExporter(
-        endpoint="http://localhost:4317",
-        # credentials=ChannelCredentials(credentials),
-        # headers=(("metadata","value")),
-    )
-    span_processor = BatchSpanProcessor(otlp_exporter)
-elif OTEL_EXPORTER == "console":
-    from opentelemetry.sdk.trace.export import ConsoleSpanExporter
-    span_processor = BatchSpanProcessor(ConsoleSpanExporter())
-
-trace.get_tracer_provider().add_span_processor(span_processor)
