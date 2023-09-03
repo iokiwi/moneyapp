@@ -2,4 +2,8 @@ Django >= 4.2.1
 ofxparse >= 0.21
 python-dotenv >= 1.0.0
 gunicorn>=21.2.0
-mysqlclient>=2.2.0
+# mysqlclient>=2.2.0
+
+opentelemetry-sdk >= 1.19.0
+opentelemetry-instrumentation-django >= 0.40b0
+opentelemetry-exporter-otlp-proto-grpc >= 1.19.0

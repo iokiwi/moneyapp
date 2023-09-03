@@ -10,3 +10,4 @@ Export*.csv
 
 script.py
 .env
+.vscode/

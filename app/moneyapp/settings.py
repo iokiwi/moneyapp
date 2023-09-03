@@ -10,13 +10,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
-from pathlib import Path
-# from os import environ
-
 import os
+from pathlib import Path
 from dotenv import load_dotenv
-
 load_dotenv()
+
 
 ENVIRONMENT = os.environ.get('ENVIRONMENT', default='development')
 
@@ -32,7 +30,7 @@ SECRET_KEY = os.environ["SECRET_KEY"]
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(os.environ.get("DEBUG", False))
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 HONEYCOMB_API_KEY = os.environ.get('HONEYCOMB_API_KEY')
 HONEYCOMB_DATASET = os.environ.get('HONEYCOMB_DATASET')
@@ -85,23 +83,23 @@ WSGI_APPLICATION = 'moneyapp.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.mysql",
-        "NAME": os.environ["DB_DATABASE"],
-        "USER": os.environ["DB_USERNAME"],
-        "PASSWORD": os.environ["DB_PASSWORD"],
-        "HOST": os.environ["DB_HOST"],
-        "PORT": os.environ["DB_PORT"],
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.mysql",
+#         "NAME": os.environ["DB_DATABASE"],
+#         "USER": os.environ["DB_USERNAME"],
+#         "PASSWORD": os.environ["DB_PASSWORD"],
+#         "HOST": os.environ["DB_HOST"],
+#         "PORT": os.environ["DB_PORT"],
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -143,3 +141,30 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+OTEL_EXPORTER = os.environ.get("OPEN_TELEMETRY_EXPORTER", "console")
+
+
+
+# TODO: This should be in a separate file
+from opentelemetry import trace
+from opentelemetry.sdk.resources import Resource, SERVICE_NAME
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import BatchSpanProcessor
+
+resource = Resource(attributes={SERVICE_NAME: "moneyapp-dev"})
+trace.set_tracer_provider(TracerProvider(resource=resource))
+
+if OTEL_EXPORTER == "collector":
+    from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
+    otlp_exporter = OTLPSpanExporter(
+        endpoint="http://localhost:4317",
+        # credentials=ChannelCredentials(credentials),
+        # headers=(("metadata","value")),
+    )
+    span_processor = BatchSpanProcessor(otlp_exporter)
+elif OTEL_EXPORTER == "console":
+    from opentelemetry.sdk.trace.export import ConsoleSpanExporter
+    span_processor = BatchSpanProcessor(ConsoleSpanExporter())
+
+trace.get_tracer_provider().add_span_processor(span_processor)

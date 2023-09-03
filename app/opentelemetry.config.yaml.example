@@ -1,0 +1,31 @@
+receivers:
+  otlp:
+    protocols:
+      grpc: # port 4317
+      http: # port 4318
+
+processors:
+  batch:
+
+exporters:
+  logging:
+    loglevel: debug
+  otlp:
+    endpoint: "api.honeycomb.io:443"
+    headers:
+      "x-honeycomb-team": "<API KEY>"
+
+  # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter/awsxrayexporter#exporter-configuration
+  # awsxray:
+  #   region: "ap-southeast-2"  # replace with your AWS region
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [batch]
+      exporters:
+       - otlp
+       - logging
+      #  - awsxray
+
