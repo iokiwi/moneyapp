@@ -6,12 +6,13 @@ including Open Telemetry, HoneyComb, ECS and more.
 ## Development
 
 ```python
+cd moneyapp/app
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements-dev.txt
 ```
 
-```
+```bash
 cp .env.example .env
 python manage.py migrate
 python manage.py runserver

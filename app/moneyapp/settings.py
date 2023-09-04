@@ -28,7 +28,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ["SECRET_KEY"]
 
-OTEL_EXPORTER = os.environ.get("OPEN_TELEMETRY_EXPORTER", "console")
+OTEL_EXPORTER = os.environ.get("OTEL_EXPORTER", "console")
 OTEL_SERVICE_NAME = os.environ.get("OTEL_SERVICE_NAME", "moneyapp-dev")
 OTEL_OTLP_ENDPOINT = os.environ.get("OTEL_OTLP_ENDPOINT", "http://localhost:4317")
 
