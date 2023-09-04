@@ -30,7 +30,7 @@ services:
     ports:
       - "4317:4317"
     volumes:
-      - opentelemetry.config.yaml:/etc/otel-collector-config.yaml
+      - "./opentelemetry.config.yaml:/etc/otel-collector-config.yaml"
     command: ["--config=/etc/otel-collector-config.yaml"]
 
 volumes:
