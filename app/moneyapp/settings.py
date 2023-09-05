@@ -39,11 +39,12 @@ ALLOWED_HOSTS = ["*"]
 
 # Application definition
 INSTALLED_APPS = [
-    'allauth',
-    'allauth.account',
+    # 'allauth',
+    # 'allauth.account',
     # 'allauth.socialaccount',
     'moneyapp',
     'telemetry.apps.TelemetryConfig',
+    'users.apps.UsersConfig',
     'bank_accounts.apps.BankAccountsConfig',
     'recurring_expenses.apps.RecurringExpensesConfig',
     'transactions.apps.TransactionsConfig',
@@ -59,7 +60,8 @@ AUTHENTICATION_BACKENDS = [
     # Needed to login by username in Django admin, regardless of `allauth`
     'django.contrib.auth.backends.ModelBackend',
     # `allauth` specific authentication methods, such as login by email
-    'allauth.account.auth_backends.AuthenticationBackend',
+    # 'allauth.account.auth_backends.AuthenticationBackend',
+    "sesame.backends.ModelBackend",
 ]
 
 MIDDLEWARE = [
@@ -70,6 +72,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'sesame.middleware.AuthenticationMiddleware',
     # "allauth.account.middleware.AccountMiddleware",
 ]
 
@@ -156,3 +159,10 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTH_USER_MODEL = "users.User"
+
+SESAME_MAX_AGE = 300
+
+LOGIN_REDIRECT_URL = "/admin/"
+

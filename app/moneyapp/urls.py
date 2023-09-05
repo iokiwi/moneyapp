@@ -21,6 +21,7 @@ from django.urls import include
 
 urlpatterns = [
     path("", include("transactions.urls"), name="home"),
+    path("login/", include("users.urls")),
     path("transactions/", include("transactions.urls"), name="transactions"),
     path(
         "recurring_expenses/",
