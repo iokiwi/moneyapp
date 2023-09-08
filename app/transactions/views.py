@@ -33,9 +33,7 @@ class IndexView(generic.TemplateView):
             )
 
         if "account" in self.request.GET:
-            transactions = transactions.filter(
-                account__id=self.request.GET["account"]
-            )
+            transactions = transactions.filter(account__id=self.request.GET["account"])
 
         context["transactions_total"] = transactions.aggregate(Sum("amount"))[
             "amount__sum"
@@ -47,6 +45,28 @@ class IndexView(generic.TemplateView):
             "amount__count"
         ]
         context["transactions"] = transactions.order_by("-date")
+        self.map_filtered_transactions_to_context("debit", context)
+        self.map_filtered_transactions_to_context("credit", context)
+
+        return context
+
+    def map_filtered_transactions_to_context(
+        self, trans_type: str, context: dict[str, Any]
+    ) -> Dict[str, Any]:
+        filtered_transactions = Transaction.objects.filter(transaction_type=trans_type)
+        print(filtered_transactions[1])
+        context[
+            "transactions_{}_total".format(trans_type)
+        ] = filtered_transactions.aggregate(Sum("amount"))["amount__sum"]
+
+        context[
+            "transactions_{}_mean".format(trans_type)
+        ] = filtered_transactions.aggregate(Avg("amount"))["amount__avg"]
+
+        context[
+            "transactions_{}_count".format(trans_type)
+        ] = filtered_transactions.aggregate(Count("amount"))["amount__count"]
+
         return context
 
 
@@ -56,8 +76,7 @@ class StatsView(generic.ListView):
 
     def get_queryset(self):
         return (
-            Transaction.objects
-            .filter(transaction_type="debit")
+            Transaction.objects.filter(transaction_type="debit")
             .values("payee")
             .annotate(
                 total_amount=Sum("amount"),

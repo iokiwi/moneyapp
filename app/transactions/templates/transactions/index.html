@@ -11,15 +11,27 @@
         <div class="col col-xs-12 col-md-6">
             <table class="table">
                 <tr>
+                    <td></td>
+                    <th>Credit</th>
+                    <th>Debit</th>
                     <th>Total</th>
+                </tr>
+                <tr>
+                    <th>Net</th>
+                    <td>$ {{ transactions_credit_total|floatformat:2 }}</td>
+                    <td>$ {{ transactions_debit_total|floatformat:2 }}</td>
                     <td>$ {{ transactions_total|floatformat:2 }}</td>
                 </tr>
                 <tr>
                     <th>Average</th>
+                    <td>$ {{ transactions_credit_mean|floatformat:2 }}</td>
+                    <td>$ {{ transactions_debit_mean|floatformat:2 }}</td>
                     <td>$ {{ transactions_mean|floatformat:2 }}</td>
                 </tr>
                 <tr>
                     <th>Count</th>
+                    <td>{{ transactions_credit_count }}</td>
+                    <td>{{ transactions_debit_count }}</td>
                     <td>{{ transactions_count }}</td>
                 </tr>
             </table>
