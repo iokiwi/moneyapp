@@ -22,32 +22,47 @@ class IndexView(generic.TemplateView):
 
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        transactions = Transaction.objects.all()
+        filters = self.get_filters()
 
-        if "payee" in self.request.GET:
-            transactions = transactions.filter(payee=self.request.GET["payee"])
+        transactions = list(
+            Transaction.objects.filter(**filters)
+        )
 
-        if "transaction_type" in self.request.GET:
-            transactions = transactions.filter(
-                transaction_type=self.request.GET["transaction_type"]
-            )
-
-        if "account" in self.request.GET:
-            transactions = transactions.filter(
-                account__id=self.request.GET["account"]
-            )
-
-        context["transactions_total"] = transactions.aggregate(Sum("amount"))[
-            "amount__sum"
-        ]
-        context["transactions_mean"] = transactions.aggregate(Avg("amount"))[
-            "amount__avg"
-        ]
-        context["transactions_count"] = transactions.aggregate(Count("amount"))[
-            "amount__count"
-        ]
-        context["transactions"] = transactions.order_by("-date")
+        context["aggregate_stats"] = self.get_transaction_stats(transactions)
+        context["debit_stats"] = self.get_transaction_stats(
+            [t for t in transactions if t.amount < 0]
+        )
+        context["credit_stats"] = self.get_transaction_stats(
+            [t for t in transactions if t.amount > 0]
+        )
+        context["transactions"] = sorted(
+            transactions, key=lambda t: t.date, reverse=True
+        )
         return context
+
+    def get_filters(self, transaction_type=None):
+
+        filters = {}
+        if "transactation_type" in self.request.GET:
+            filters["transactation_type"] = self.request.GET["transactation_type"]
+        if "payee" in self.request.GET:
+            filters["payee"] = self.request.GET["payee"]
+        if "account" in self.request.GET:
+            filters["account__id"] = self.request.GET["account"]
+
+        # This will override the above filters
+        if transaction_type is not None:
+            filters["transactation_type"] = transaction_type
+
+        return filters
+
+    def get_transaction_stats(self, transactions):
+        if not transactions:
+            return {"total": 0, "mean": 0, "count": 0}
+        total = sum(t.amount for t in transactions)
+        mean = total / len(transactions)
+        count = len(transactions)
+        return {"total": total, "mean": mean, "count": count}
 
 
 class StatsView(generic.ListView):
@@ -56,8 +71,7 @@ class StatsView(generic.ListView):
 
     def get_queryset(self):
         return (
-            Transaction.objects
-            .filter(transaction_type="debit")
+            Transaction.objects.filter(transaction_type="debit")
             .values("payee")
             .annotate(
                 total_amount=Sum("amount"),

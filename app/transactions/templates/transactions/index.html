@@ -8,23 +8,40 @@
 
 {% if transactions %}
     <div class="row">
+
         <div class="col col-xs-12 col-md-6">
             <table class="table">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Credit</th>
+                        <th>Debit</th>
+                        <th>Total</th>
+                    <tr>
+                <thead>
                 <tr>
-                    <th>Total</th>
-                    <td>$ {{ transactions_total|floatformat:2 }}</td>
+                    <th>Sum</th>
+                    <td>{{ credit_stats.total|floatformat:2 }}</td>
+                    <td>{{ debit_stats.total|floatformat:2 }}</td>
+                    <td>{{ aggregate_stats.total|floatformat:2 }}</td>
                 </tr>
                 <tr>
                     <th>Average</th>
-                    <td>$ {{ transactions_mean|floatformat:2 }}</td>
+                    <td>{{ credit_stats.mean|floatformat:2 }}</td>
+                    <td>{{ debit_stats.mean|floatformat:2 }}</td>
+                    <td>{{ aggregate_stats.mean|floatformat:2 }}</td>
                 </tr>
                 <tr>
                     <th>Count</th>
-                    <td>{{ transactions_count }}</td>
+                    <td>{{ credit_stats.count }}</td>
+                    <td>{{ debit_stats.count }}</td>
+                    <td>{{ aggregate_stats.count }}</td>
                 </tr>
             </table>
         </div>
+
     </div>
+
     <table class="table">
         <thead>
         <tr>
