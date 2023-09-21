@@ -31,9 +31,15 @@ class IndexView(generic.TemplateView):
             transactions = transactions.filter(
                 transaction_type=self.request.GET["transaction_type"]
             )
-
         if "account" in self.request.GET:
             transactions = transactions.filter(account__id=self.request.GET["account"])
+
+        context["debit_stats"] = self.get_transaction_stats(
+            [t for t in transactions if t.transaction_type == "debit"]
+        )
+        context["credit_stats"] = self.get_transaction_stats(
+            [t for t in transactions if t.transaction_type == "credit"]
+        )
 
         context["transactions_total"] = transactions.aggregate(Sum("amount"))[
             "amount__sum"
@@ -45,29 +51,17 @@ class IndexView(generic.TemplateView):
             "amount__count"
         ]
         context["transactions"] = transactions.order_by("-date")
-        self.map_filtered_transactions_to_context("debit", context)
-        self.map_filtered_transactions_to_context("credit", context)
 
         return context
 
-    def map_filtered_transactions_to_context(
-        self, trans_type: str, context: dict[str, Any]
-    ) -> Dict[str, Any]:
-        filtered_transactions = Transaction.objects.filter(transaction_type=trans_type)
-        print(filtered_transactions[1])
-        context[
-            "transactions_{}_total".format(trans_type)
-        ] = filtered_transactions.aggregate(Sum("amount"))["amount__sum"]
+    def get_transaction_stats(self, transactions):
+        if not transactions:
+            return {"total": 0, "mean": 0, "count": 0}
 
-        context[
-            "transactions_{}_mean".format(trans_type)
-        ] = filtered_transactions.aggregate(Avg("amount"))["amount__avg"]
-
-        context[
-            "transactions_{}_count".format(trans_type)
-        ] = filtered_transactions.aggregate(Count("amount"))["amount__count"]
-
-        return context
+        total = sum(t.amount for t in transactions)
+        mean = total / len(transactions)
+        count = len(transactions)
+        return {"total": total, "mean": mean, "count": count}
 
 
 class StatsView(generic.ListView):
