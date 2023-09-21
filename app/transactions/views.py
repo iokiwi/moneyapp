@@ -34,22 +34,13 @@ class IndexView(generic.TemplateView):
         if "account" in self.request.GET:
             transactions = transactions.filter(account__id=self.request.GET["account"])
 
+        context["aggregate_stats"] = self.get_transaction_stats(transactions)
         context["debit_stats"] = self.get_transaction_stats(
-            [t for t in transactions if t.transaction_type == "debit"]
+            [t for t in transactions if t.amount < 0]
         )
         context["credit_stats"] = self.get_transaction_stats(
-            [t for t in transactions if t.transaction_type == "credit"]
+            [t for t in transactions if t.amount > 0]
         )
-
-        context["transactions_total"] = transactions.aggregate(Sum("amount"))[
-            "amount__sum"
-        ]
-        context["transactions_mean"] = transactions.aggregate(Avg("amount"))[
-            "amount__avg"
-        ]
-        context["transactions_count"] = transactions.aggregate(Count("amount"))[
-            "amount__count"
-        ]
         context["transactions"] = transactions.order_by("-date")
 
         return context

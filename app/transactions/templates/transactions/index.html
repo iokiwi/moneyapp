@@ -20,19 +20,19 @@
                     <th>Net</th>
                     <td>$ {{ credit_stats.total|floatformat:2 }}</td>
                     <td>$ {{ debit_stats.total|floatformat:2 }}</td>
-                    <td>$ {{ transactions_total|floatformat:2 }}</td>
+                    <td>$ {{ aggregate_stats.total|floatformat:2 }}</td>
                 </tr>
                 <tr>
                     <th>Average</th>
                     <td>$ {{ credit_stats.mean|floatformat:2 }}</td>
                     <td>$ {{ debit_stats.mean|floatformat:2 }}</td>
-                    <td>$ {{ transactions_mean|floatformat:2 }}</td>
+                    <td>$ {{ aggregate_stats.mean|floatformat:2 }}</td>
                 </tr>
                 <tr>
                     <th>Count</th>
                     <td>{{ credit_stats.count }}</td>
                     <td>{{ debit_stats.count }}</td>
-                    <td>{{ transactions_count }}</td>
+                    <td>{{ aggregate_stats.count }}</td>
                 </tr>
             </table>
         </div>
