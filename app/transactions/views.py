@@ -119,7 +119,6 @@ def upload(request):
                     mcc=t.mcc,
                     checknum=t.checknum,
                 )
-                # print(transaction)
                 transaction.save()
                 rows_imported += 1
             except IntegrityError:
