@@ -17,11 +17,11 @@ exporters:
     tls:
       insecure: true
 
-  otlp:
-    endpoint: "api.honeycomb.io:443"
-    headers:
-      "x-honeycomb-team": "<API KEY>"
-      # "x-honeycomb-dataset": "moneyapp-dev" # required for honeycomb-classic only
+  # otlp:
+  #   endpoint: "api.honeycomb.io:443"
+  #   headers:
+  #     "x-honeycomb-team": "<API KEY>"
+  #     # "x-honeycomb-dataset": "moneyapp-dev" # required for honeycomb-classic only
 
   # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter/awsxrayexporter#exporter-configuration
   # awsxray:
