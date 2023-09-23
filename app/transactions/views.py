@@ -31,23 +31,28 @@ class IndexView(generic.TemplateView):
             transactions = transactions.filter(
                 transaction_type=self.request.GET["transaction_type"]
             )
-
         if "account" in self.request.GET:
-            transactions = transactions.filter(
-                account__id=self.request.GET["account"]
-            )
+            transactions = transactions.filter(account__id=self.request.GET["account"])
 
-        context["transactions_total"] = transactions.aggregate(Sum("amount"))[
-            "amount__sum"
-        ]
-        context["transactions_mean"] = transactions.aggregate(Avg("amount"))[
-            "amount__avg"
-        ]
-        context["transactions_count"] = transactions.aggregate(Count("amount"))[
-            "amount__count"
-        ]
+        context["aggregate_stats"] = self.get_transaction_stats(transactions)
+        context["debit_stats"] = self.get_transaction_stats(
+            [t for t in transactions if t.amount < 0]
+        )
+        context["credit_stats"] = self.get_transaction_stats(
+            [t for t in transactions if t.amount > 0]
+        )
         context["transactions"] = transactions.order_by("-date")
+
         return context
+
+    def get_transaction_stats(self, transactions):
+        if not transactions:
+            return {"total": 0, "mean": 0, "count": 0}
+
+        total = sum(t.amount for t in transactions)
+        mean = total / len(transactions)
+        count = len(transactions)
+        return {"total": total, "mean": mean, "count": count}
 
 
 class StatsView(generic.ListView):
@@ -56,8 +61,7 @@ class StatsView(generic.ListView):
 
     def get_queryset(self):
         return (
-            Transaction.objects
-            .filter(transaction_type="debit")
+            Transaction.objects.filter(transaction_type="debit")
             .values("payee")
             .annotate(
                 total_amount=Sum("amount"),
@@ -106,7 +110,6 @@ def upload(request):
                     mcc=t.mcc,
                     checknum=t.checknum,
                 )
-                # print(transaction)
                 transaction.save()
                 rows_imported += 1
             except IntegrityError:
