@@ -165,4 +165,3 @@ AUTH_USER_MODEL = "users.User"
 SESAME_MAX_AGE = 300
 
 LOGIN_REDIRECT_URL = "/admin/"
-

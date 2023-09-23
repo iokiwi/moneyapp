@@ -6,12 +6,17 @@ services:
     ports:
       - 8000:8000
     environment:
+      # Required to make opentelemety-instrumentation pink the setting file correctly.
+      DJANGO_SETTINGS_MODULE: moneyapp.settings
       DB_ENGINE: mysql
       DB_DATABASE: moneyapp
       DB_USERNAME: user
       DB_PASSWORD: password
       DB_PORT: 3306
       DB_HOST: db
+    volumes:
+      - ./app:/app
+      - ./entrypoint.sh:/entrypoint.sh
     depends_on:
       - db
 
@@ -30,8 +35,21 @@ services:
     ports:
       - "4317:4317"
     volumes:
-      - "./opentelemetry.config.yaml:/etc/otel-collector-config.yaml"
+      - "./otel-collector-config.yaml:/etc/otel-collector-config.yaml"
     command: ["--config=/etc/otel-collector-config.yaml"]
+
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    ports:
+      - "6831:6831/udp"
+      - "6832:6832/udp"
+      - "5778:5778"
+      - "14268:14268"
+      - "14250:14250"
+      - "8080-8083:8080-8083"
+      - "5775:5775/udp"
+      - "16686:16686"
+      - "9411:9411"
 
 volumes:
   db: {}

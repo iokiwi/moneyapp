@@ -8,13 +8,20 @@ processors:
   batch:
 
 exporters:
+
   logging:
     loglevel: debug
+
+  jaeger:
+    endpoint: "jaeger:14250"
+    tls:
+      insecure: true
 
   otlp:
     endpoint: "api.honeycomb.io:443"
     headers:
       "x-honeycomb-team": "<API KEY>"
+      # "x-honeycomb-dataset": "moneyapp-dev" # required for honeycomb-classic only
 
   # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter/awsxrayexporter#exporter-configuration
   # awsxray:
@@ -28,5 +35,5 @@ service:
       exporters:
        - otlp
        - logging
+       - jaeger
       #  - awsxray
-
