@@ -8,5 +8,5 @@ done
 
 python manage.py migrate
 # gunicorn -b 0.0.0.0:8000 moneyapp.wsgi --reload
-export $DJANGO_SETTINGS_MODULE;
+export DJANGO_SETTINGS_MODULE="moneyapp.settings"
 opentelemetry-instrument gunicorn -b 0.0.0.0:8000 moneyapp.wsgi --reload

@@ -1,0 +1,17 @@
+{% extends "moneyapp/base.html" %}
+
+{% block content %}
+
+<div class="container">
+
+    <form action="{{ request.path }}" method="POST">
+        {% csrf_token %}
+        <p>
+            {{ form }}
+            <input class="btn btn-primary" type="submit" value="Register">
+        </p>
+    </form>
+
+</div>
+
+{% endblock %}

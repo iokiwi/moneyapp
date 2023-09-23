@@ -76,7 +76,8 @@ MIDDLEWARE = [
     # "allauth.account.middleware.AccountMiddleware",
 ]
 
-SOCIALACCOUNT_PROVIDERS = {}
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+# EMAIL_BACKEND = "django.core.mail.backends.dummy.EmailBackend"
 
 ROOT_URLCONF = 'moneyapp.urls'
 
@@ -101,23 +102,23 @@ WSGI_APPLICATION = 'moneyapp.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-
 # DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.mysql",
-#         "NAME": os.environ["DB_DATABASE"],
-#         "USER": os.environ["DB_USERNAME"],
-#         "PASSWORD": os.environ["DB_PASSWORD"],
-#         "HOST": os.environ["DB_HOST"],
-#         "PORT": os.environ["DB_PORT"],
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
+
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.mysql",
+        "NAME": os.environ["DB_DATABASE"],
+        "USER": os.environ["DB_USERNAME"],
+        "PASSWORD": os.environ["DB_PASSWORD"],
+        "HOST": os.environ["DB_HOST"],
+        "PORT": os.environ["DB_PORT"],
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -164,4 +165,4 @@ AUTH_USER_MODEL = "users.User"
 
 SESAME_MAX_AGE = 300
 
-LOGIN_REDIRECT_URL = "/admin/"
+LOGIN_REDIRECT_URL = "/bank_accounts/"
