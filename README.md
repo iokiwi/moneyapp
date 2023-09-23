@@ -20,10 +20,12 @@ python manage.py runserver
 
 ## Docker Dev Environment
 
+```bash
+cp app/.env.example app/.env
+```
+
 Build
 ```bash
-docker build . -t moneyapp:latest
-# or
 docker-compose build
 ```
 
@@ -32,15 +34,24 @@ Run
 docker-compose up -d
 ```
 
-Migrate
+Hot Reload:
+ * The app container will reload on code changes
+
+Jaeger UI:
+  http://localhost:16686/
+
+APP:
+  http://localhost:8000/
+
+<!-- Migrate
 ```bash
 docker-compose exec web python manage.py migrate
-```
+``` -->
 
 ## Running an OpenTelemetry Collector
 
 ```bash
-cp opentelemetry.config.yaml.example opentelemetry.config.yaml
+cp otel-collector-config.yaml.example otel-collector-config.yaml
 ```
 
 Included in [docker-compose.yml](docker-compose.yml). Or run it manually
@@ -48,7 +59,7 @@ Included in [docker-compose.yml](docker-compose.yml). Or run it manually
 ```bash
 docker run \
     -p 4317:4317 \
-    -v ./opentelemetry.config.yaml:/etc/otel-collector-config.yaml \
+    -v ./otel-collector-config.yaml:/etc/otel-collector-config.yaml \
     otel/opentelemetry-collector:latest \
     --config=/etc/otel-collector-config.yaml
 ```
