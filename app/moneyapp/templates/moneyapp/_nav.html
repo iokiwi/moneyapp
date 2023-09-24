@@ -29,6 +29,21 @@
                 <!-- <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="{% url 'recurring_expenses:index' %}">Recurring Expenses</a>
                 </li> -->
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Welcome, {{ user.email }}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="{% url 'logout' %}">Log Out</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="{% url 'users:sign_up' %}">Sign Up</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="{% url 'users:login' %}">Login</a>
+                    </li>
+                {% endif %}
             </ul>
             <!--
             <form class="d-flex" role="search">
