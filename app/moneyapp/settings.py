@@ -72,7 +72,6 @@ MIDDLEWARE = [
 ]
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-# EMAIL_BACKEND = "django.core.mail.backends.dummy.EmailBackend"
 
 ROOT_URLCONF = 'moneyapp.urls'
 
@@ -139,13 +138,11 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-# TIME_ZONE = 'UTC'
-TIME_ZONE = 'Pacific/Auckland'
+TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
-USE_TZ = True
-
+# USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
@@ -159,10 +156,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = "users.User"
 
-# SESAME_MAX_AGE = 300
-# TOKEN_NAME="sesame"
+SESAME_MAX_AGE = 300
 
 LOGIN_REDIRECT_URL = "/"
-# LOGIN_REDIRECT_URL = "/admin/"
-# LOGIN_URL = "/login/"
-# LOGIN_REDIRECT_URL = "/accounts/profile/"
