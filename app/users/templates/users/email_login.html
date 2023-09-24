@@ -3,7 +3,6 @@
 {% block content %}
 
     <div class="container">
-        <!-- <div class="row"> -->
         {% if request.user.is_authenticated %}
         <p>You are already logged in as {{ request.user.email }}.</p>
         {% endif %}
@@ -11,7 +10,7 @@
             {% csrf_token %}
             <p>
                 {{ form }}
-                <input type="submit" value="Send log in link">
+                <input class="btn btn-primary" type="submit" value="Send log in link">
             </p>
         </form>
     </div>

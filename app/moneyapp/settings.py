@@ -35,21 +35,20 @@ OTEL_OTLP_ENDPOINT = os.environ.get("OTEL_OTLP_ENDPOINT", "http://localhost:4317
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(os.environ.get("DEBUG", False))
 
+LOGIN_REDIRECT_URL = "/"
+
 ALLOWED_HOSTS = ["*"]
 
 # Application definition
 INSTALLED_APPS = [
-    # 'allauth',
-    # 'allauth.account',
-    # 'allauth.socialaccount',
     'moneyapp',
     'telemetry.apps.TelemetryConfig',
-    'users.apps.UsersConfig',
     'bank_accounts.apps.BankAccountsConfig',
     'recurring_expenses.apps.RecurringExpensesConfig',
     'transactions.apps.TransactionsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
+    'users.apps.UsersConfig',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -57,10 +56,7 @@ INSTALLED_APPS = [
 ]
 
 AUTHENTICATION_BACKENDS = [
-    # Needed to login by username in Django admin, regardless of `allauth`
     'django.contrib.auth.backends.ModelBackend',
-    # `allauth` specific authentication methods, such as login by email
-    # 'allauth.account.auth_backends.AuthenticationBackend',
     "sesame.backends.ModelBackend",
 ]
 
@@ -70,10 +66,9 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'sesame.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'sesame.middleware.AuthenticationMiddleware',
-    # "allauth.account.middleware.AccountMiddleware",
 ]
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
@@ -144,11 +139,12 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+# TIME_ZONE = 'UTC'
+TIME_ZONE = 'Pacific/Auckland'
 
 USE_I18N = True
 
-# USE_TZ = True
+USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
@@ -163,6 +159,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = "users.User"
 
-SESAME_MAX_AGE = 300
+# SESAME_MAX_AGE = 300
+# TOKEN_NAME="sesame"
 
-LOGIN_REDIRECT_URL = "/bank_accounts/"
+LOGIN_REDIRECT_URL = "/"
+# LOGIN_REDIRECT_URL = "/admin/"
+# LOGIN_URL = "/login/"
+# LOGIN_REDIRECT_URL = "/accounts/profile/"

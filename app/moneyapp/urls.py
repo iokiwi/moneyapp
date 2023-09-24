@@ -18,10 +18,12 @@ from django.contrib import admin
 from django.urls import path
 from django.urls import include
 
+from users.views import UserLogoutView
 
 urlpatterns = [
     path("", include("transactions.urls"), name="home"),
-    path("login/", include("users.urls"), name="users"),
+    path("logout/", UserLogoutView.as_view(), name="logout"),
+    path("users/", include("users.urls")),
     path("transactions/", include("transactions.urls"), name="transactions"),
     path(
         "recurring_expenses/",
