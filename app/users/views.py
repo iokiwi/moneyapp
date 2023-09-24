@@ -5,8 +5,6 @@ from django.contrib.auth import get_user_model, logout
 from urllib.parse import urlencode
 from django.views import View
 
-# from sesame.views import LoginView
-
 from sesame.utils import get_parameters
 
 from .forms import EmailLoginForm

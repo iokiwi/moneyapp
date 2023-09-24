@@ -43,12 +43,12 @@ ALLOWED_HOSTS = ["*"]
 INSTALLED_APPS = [
     'moneyapp',
     'telemetry.apps.TelemetryConfig',
+    'users.apps.UsersConfig',
     'bank_accounts.apps.BankAccountsConfig',
     'recurring_expenses.apps.RecurringExpensesConfig',
     'transactions.apps.TransactionsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
-    'users.apps.UsersConfig',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
