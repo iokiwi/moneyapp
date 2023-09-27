@@ -9,7 +9,6 @@ RUN apk update && \
     apk add --no-cache \
         mariadb-dev \
         libffi-dev \
-        python3-dev \
         build-base && \
     pip install -r requirements.txt && \
     apk del \
