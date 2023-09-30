@@ -1,0 +1,29 @@
+name: Python Code Quality and Lint
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  flake8-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8 safety
+
+      - name: Run flake8 Lint
+        run: |
+          flake8 .
+
+      - name: Run safety check
+        run: |
+          safety check
