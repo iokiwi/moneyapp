@@ -1,7 +1,6 @@
-name: Python Code Quality and Lint
+name: Python Code Quality
 
 on:
-  push:
   pull_request:
     branches: [ main ]
 
