@@ -2,4 +2,4 @@
 max-line-length = 88
 exclude = 
   */migrations/*
-# ignore = F401
+ignore = F401
