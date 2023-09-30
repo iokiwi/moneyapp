@@ -1,4 +1,4 @@
-name: Python Code Quality and Lint
+name: Python Code Quality
 
 on:
   push:
