@@ -23,7 +23,7 @@ from users.views import UserLogoutView
 urlpatterns = [
     path("", include("transactions.urls"), name="home"),
     path("logout/", UserLogoutView.as_view(), name="logout"),
-    path("users/", include("users.urls")),
+    path("accounts/", include("users.urls")),
     path("transactions/", include("transactions.urls"), name="transactions"),
     path(
         "recurring_expenses/",

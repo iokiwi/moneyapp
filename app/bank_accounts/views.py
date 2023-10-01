@@ -1,11 +1,11 @@
 from django.shortcuts import render
 from django.views import generic
+from django.contrib.auth.mixins import LoginRequiredMixin
 
-# Create your views here.
 from .models import BankAccount
 
 
-class IndexView(generic.TemplateView):
+class IndexView(LoginRequiredMixin, generic.TemplateView):
 
     template_name = "bank_accounts/index.html"
 
@@ -15,7 +15,7 @@ class IndexView(generic.TemplateView):
         return context
 
 
-class DetailView(generic.TemplateView):
+class DetailView(LoginRequiredMixin, generic.TemplateView):
 
     template_name = "bank_accounts/index.html"
 

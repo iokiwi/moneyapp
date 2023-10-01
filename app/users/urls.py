@@ -10,7 +10,7 @@ from sesame.views import LoginView
 
 app_name = "users"
 urlpatterns = [
-    path("", EmailLoginView.as_view(), name="login"),
+    path("login/", EmailLoginView.as_view(), name="login"),
     path("auth/", LoginView.as_view(), name="auth"),
     path("signup/", UserRegistrationFormView.as_view(), name="sign_up"),
     path(

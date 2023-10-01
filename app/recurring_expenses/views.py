@@ -1,5 +1,8 @@
 import csv
 
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 from django.shortcuts import render
 from django.views import generic
 from django.http import HttpResponseRedirect
@@ -11,12 +14,14 @@ from .models import RecurringExpense
 from .forms import RecurringExpenseForm
 
 
+@login_required
 def delete_recurring_expense(request, expense_id):
     recurring_expense = RecurringExpense.objects.get(pk=expense_id)
     recurring_expense.delete()
     return HttpResponseRedirect(reverse("recurring_expenses:index"))
 
 
+@login_required
 def create_or_edit_recurring_expense(request, expense_id=None):
     if expense_id is None:
         create_recurring_expense(request)
@@ -32,6 +37,7 @@ def parse_bool(s):
     raise ValueError("Cannot parse boolean from {}".format(s))
 
 
+@login_required
 def import_recurring_expenses(request):
     if request.method == "GET":
         return render(request, "recurring_expenses/import.html", {})
@@ -80,6 +86,7 @@ def import_recurring_expenses(request):
         return HttpResponseRedirect(reverse("recurring_expenses:import"))
 
 
+@login_required
 def edit_recurring_expense(request, expense_id):
     recurring_expense = RecurringExpense.objects.get(pk=expense_id)
     if request.method == "POST":
@@ -96,6 +103,7 @@ def edit_recurring_expense(request, expense_id):
         )
 
 
+@login_required
 def create_recurring_expense(request):
     if request.method == "POST":
         form = RecurringExpenseForm(request.POST)
@@ -108,7 +116,7 @@ def create_recurring_expense(request):
     return render(request, "recurring_expenses/new.html", {"form": form})
 
 
-class IndexView(generic.TemplateView):
+class IndexView(LoginRequiredMixin, generic.TemplateView):
     template_name = "recurring_expenses/index.html"
 
     def get_context_data(self, **kwargs):
@@ -117,7 +125,7 @@ class IndexView(generic.TemplateView):
         return context
 
 
-class DetailsView(generic.TemplateView):
+class DetailsView(LoginRequiredMixin, generic.TemplateView):
     template_name = "recurring_expenses/detail.html"
 
     def get_context_data(self, **kwargs):
@@ -126,8 +134,7 @@ class DetailsView(generic.TemplateView):
         return context
 
 
-# Create your views here.
-class CreateView(View):
+class CreateView(LoginRequiredMixin, View):
     template_name = "recurring_expenses/new.html"
 
     def get(self, request, *args, **kwargs):
