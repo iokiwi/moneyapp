@@ -2,16 +2,38 @@
 
 {% block content %}
 
-<div class="container">
+<div class="container d-flex align-items-center justify-content-center" style="height: 80vh">
 
-    <form action="{{ request.path }}" method="POST">
-        {% csrf_token %}
-        <p>
-            {{ form }}
-            <input class="btn btn-primary" type="submit" value="Register">
-        </p>
-    </form>
+    <div class="col-md-4 col-sm-12">
 
+        <h2 class="mb-4">Sign Up</h2>
+
+        <form action="{{ request.path }}" method="POST">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+
+            <div class="mb-3 row">
+                {{ form.name.errors }}
+                <!-- <label for="{{ form.name.id_for_label }}" class="col-sm-2 col-form-label">Name</label> -->
+                <div class="col-sm-12">
+                    {{ form.name }}
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                {{ form.email.errors }}
+                <!-- <label for="{{ form.email.id_for_label }}" class="col-sm-2 col-form-label">Email Address</label> -->
+                <div class="">
+                    {{ form.email }}
+                </div>
+            </div>
+
+            <p>
+                <input class="btn btn-outline-success w-100" type="submit" value="Request Sign Up Link">
+            </p>
+        </form>
+
+    </div>
 </div>
 
 {% endblock %}

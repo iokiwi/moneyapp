@@ -7,7 +7,7 @@ from django.views import View
 
 from sesame.utils import get_parameters
 
-from .forms import EmailLoginForm
+from .forms import EmailLoginForm, UserRegistrationForm
 
 
 def get_user(email):
@@ -59,12 +59,14 @@ class EmailLoginView(FormView):
 
         link = get_magic_link(self.request, user)
         send_email(user, link)
-        return render(self.request, "users/email_login_success.html")
+        # NOTE(simonm): We currently do not do a redirect. Resubmitting the form
+        # here will result in the post being sent again.
+        return render(self.request, "users/pending_validation.html")
 
 
 class UserRegistrationFormView(FormView):
     template_name = "users/register.html"
-    form_class = EmailLoginForm
+    form_class = UserRegistrationForm
 
     def form_valid(self, form):
         email = form.cleaned_data["email"]
