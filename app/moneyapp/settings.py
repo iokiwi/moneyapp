@@ -35,7 +35,7 @@ OTEL_OTLP_ENDPOINT = os.environ.get("OTEL_OTLP_ENDPOINT", "http://localhost:4317
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(os.environ.get("DEBUG", False))
 
-LOGIN_REDIRECT_URL = "/"
+# LOGIN_REDIRECT_URL = "/"
 
 ALLOWED_HOSTS = ["*"]
 
@@ -157,5 +157,3 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = "users.User"
 
 SESAME_MAX_AGE = 300
-
-LOGIN_REDIRECT_URL = "/"

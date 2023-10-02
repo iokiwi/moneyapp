@@ -8,7 +8,8 @@ from django.http import HttpResponseRedirect
 from django.db import IntegrityError
 from django.contrib import messages
 
-# from django.utils.text import slugify
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
 
 from ofxparse import OfxParser
 
@@ -16,7 +17,7 @@ from .models import Transaction
 from bank_accounts.models import BankAccount
 
 
-class IndexView(generic.TemplateView):
+class IndexView(LoginRequiredMixin, generic.TemplateView):
     template_name = "transactions/index.html"
     context_object_name = "transactions"
 
@@ -55,7 +56,7 @@ class IndexView(generic.TemplateView):
         return {"total": total, "mean": mean, "count": count}
 
 
-class StatsView(generic.ListView):
+class StatsView(LoginRequiredMixin, generic.ListView):
     template_name = "transactions/stats.html"
     context_object_name = "results"
 
@@ -72,6 +73,7 @@ class StatsView(generic.ListView):
         )
 
 
+@login_required
 def upload(request):
     if request.method == "GET":
         return render(request, "transactions/import.html", {})
