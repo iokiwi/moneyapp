@@ -2,17 +2,31 @@
 
 {% block content %}
 
-    <div class="container">
+<div class="container d-flex align-items-center justify-content-center" style="height: 80vh">
+
+    <div class="col-md-4 col-sm-12">
         {% if request.user.is_authenticated %}
-        <p>You are already logged in as {{ request.user.email }}.</p>
+            <p>You are already logged in as {{ request.user.email }}.</p>
+        {% else %}
+
+            <h2 class="mb-4">Log In</h2>
+
+            <form action="{{ request.path }}" method="POST">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+
+                <div class="mb-3 row">
+                    {{ form.email.errors }}
+                    <!-- <label for="{{ form.email.id_for_label }}" class="col-sm-2 col-form-label">Email Address</label> -->
+                    <div class="col-sm-12">
+                        {{ form.email }}
+                    </div>
+                </div>
+                <p>
+                    <input class="btn btn-outline-success w-100" type="submit" value="Request Login Link">
+                </p>
+            </form>
         {% endif %}
-        <form action="{{ request.path }}" method="POST">
-            {% csrf_token %}
-            <p>
-                {{ form }}
-                <input class="btn btn-primary" type="submit" value="Send log in link">
-            </p>
-        </form>
     </div>
 
 {% endblock %}
