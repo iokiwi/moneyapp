@@ -1,8 +1,6 @@
 # MoneyApp
 
-![flake8](https://github.com/iokiwi/moneyapp/actions/workflows/flake8.yml/badge.svg)
-![black](https://github.com/iokiwi/moneyapp/actions/workflows/black.yml/badge.svg)
-
+![Python Code Style](https://github.com/iokiwi/moneyapp/actions/workflows/code-style.yml/badge.svg)
 
 This is a semi serious app to try real world deployments of several technologies
 including Open Telemetry, HoneyComb, ECS and more.
