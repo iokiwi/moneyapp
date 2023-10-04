@@ -8,7 +8,7 @@ from opentelemetry.instrumentation.django import DjangoInstrumentor
 
 def main():
     """Run administrative tasks."""
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'moneyapp.settings')
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "moneyapp.settings")
 
     DjangoInstrumentor().instrument()
 
@@ -23,5 +23,5 @@ def main():
     execute_from_command_line(sys.argv)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

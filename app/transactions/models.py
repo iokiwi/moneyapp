@@ -9,7 +9,6 @@ from bank_accounts.models import BankAccount
 
 
 class Transaction(models.Model):
-
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     account = models.ForeignKey(BankAccount, on_delete=models.CASCADE)
     transaction_id = models.CharField(unique=True, max_length=50)
@@ -41,6 +40,6 @@ class Transaction(models.Model):
             "memo": self.memo,
             "sic": self.sic,
             "mcc": self.mcc,
-            "checknum": self.checknum
+            "checknum": self.checknum,
         }
         return "Transaction({})".format(data)
