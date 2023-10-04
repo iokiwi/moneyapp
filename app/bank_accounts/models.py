@@ -5,7 +5,6 @@ import uuid
 
 # Create your models here.
 class BankAccount(models.Model):
-
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     account_id = models.CharField(unique=True, max_length=50)
     account_type = models.CharField(max_length=50, null=True)

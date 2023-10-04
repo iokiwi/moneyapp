@@ -6,7 +6,6 @@ from .models import BankAccount
 
 
 class IndexView(LoginRequiredMixin, generic.TemplateView):
-
     template_name = "bank_accounts/index.html"
 
     def get_context_data(self, **kwargs):
@@ -16,7 +15,6 @@ class IndexView(LoginRequiredMixin, generic.TemplateView):
 
 
 class DetailView(LoginRequiredMixin, generic.TemplateView):
-
     template_name = "bank_accounts/index.html"
 
     def get_context_data(self, **kwargs):

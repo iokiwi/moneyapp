@@ -15,11 +15,15 @@ class RecurringExpense(models.Model):
     )
 
     def __str__(self):
-        return "RecurringExpense({})".format(str({
-            "id": self.id,
-            "active": self.active,
-            "particulars": self.particulars,
-            "amount": self.amount,
-            "currency": self.currency,
-            "period": self.period,
-        }))
+        return "RecurringExpense({})".format(
+            str(
+                {
+                    "id": self.id,
+                    "active": self.active,
+                    "particulars": self.particulars,
+                    "amount": self.amount,
+                    "currency": self.currency,
+                    "period": self.period,
+                }
+            )
+        )
