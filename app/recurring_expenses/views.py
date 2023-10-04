@@ -14,11 +14,12 @@ from django.urls import reverse
 from .models import RecurringExpense
 from .forms import RecurringExpenseForm
 
+
 def get_fxRate_nzd():
-    url = "https://api.exchangerate-api.com/v4/latest/NZD" 
+    url = "https://api.exchangerate-api.com/v4/latest/NZD"
     response = requests.request("GET", url)
     return response.json()["rates"]
- 
+
 
 @login_required
 def delete_recurring_expense(request, expense_id):
@@ -36,9 +37,9 @@ def create_or_edit_recurring_expense(request, expense_id=None):
 
 
 def parse_bool(s):
-    if s.lower() == 'true':
+    if s.lower() == "true":
         return True
-    if s.lower() == 'false':
+    if s.lower() == "false":
         return False
     raise ValueError("Cannot parse boolean from {}".format(s))
 
@@ -48,7 +49,6 @@ def import_recurring_expenses(request):
     if request.method == "GET":
         return render(request, "recurring_expenses/import.html", {})
     if request.method == "POST":
-
         uploaded_file = request.FILES.get("file")
 
         if uploaded_file is None:
@@ -87,7 +87,8 @@ def import_recurring_expenses(request):
             request,
             "{}/{} Recurring expenses imported successfully. {} skipped".format(
                 rows_imported, total_rows, rows_errored
-            ))
+            ),
+        )
 
         return HttpResponseRedirect(reverse("recurring_expenses:import"))
 
@@ -130,7 +131,7 @@ class IndexView(LoginRequiredMixin, generic.TemplateView):
         fx_rates = get_fxRate_nzd()
         expenses = RecurringExpense.objects.all()
         for expense in expenses:
-            amount_nzd = (1/fx_rates[expense.currency]) * float(expense.amount)
+            amount_nzd = (1 / fx_rates[expense.currency]) * float(expense.amount)
             expense.amount_nzd = amount_nzd
         context["recurring_expenses"] = expenses
         return context
