@@ -40,6 +40,7 @@
                 <th>Particulars</th>
                 <th>Amount</th>
                 <th>Currency</th>
+                <th>Amount NZD</th>
                 <th>Period (Months)</th>
                 <th></th>
                 <th></th>
@@ -54,7 +55,9 @@
                 <td>{{ expense.particulars }}</td>
                 <td>{{ expense.amount|floatformat:2 }}</td>
                 <td>{{ expense.currency }}</td>
+                <td>{{ expense.amount_nzd|floatformat:2 }}</td>
                 <td>{{ expense.period }}</td>
+
                 <td>
                     <a href="{% url 'recurring_expenses:edit' expense.id %}"><i class="bi bi-pencil"></i></a>
                 </td>
