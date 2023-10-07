@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="198.34874mm"
+   height="195.17221mm"
+   viewBox="0 0 198.34874 195.17221"
+   version="1.1"
+   id="svg5"
+   sodipodi:docname="moneyapp-compose-arch.svg"
+   inkscape:version="1.2.1 (9c6d41e410, 2022-07-14)"
+   inkscape:export-filename="moneyapp-compose-arch.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="1"
+     inkscape:cx="418.5"
+     inkscape:cy="536.5"
+     inkscape:window-width="1740"
+     inkscape:window-height="1342"
+     inkscape:window-x="1242"
+     inkscape:window-y="11"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2">
+    <rect
+       x="740.41302"
+       y="368.27432"
+       width="51.009663"
+       height="33.23357"
+       id="rect2488" />
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(73.1315,27.363197)">
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.425256;stroke-linecap:round;stroke-linejoin:bevel;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
+       id="rect14330"
+       width="198.34874"
+       height="195.17221"
+       x="-73.1315"
+       y="-27.363197"
+       ry="0" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.5861px;font-family:Lato;-inkscape-font-specification:Lato;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.600001;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
+       x="173.10037"
+       y="89.770889"
+       id="text2484"><tspan
+         sodipodi:role="line"
+         id="tspan2482"
+         style="stroke-width:0.6"
+         x="173.10037"
+         y="89.770889" /></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.1111px;font-family:Lato;-inkscape-font-specification:Lato;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.600001;stroke-linecap:round;stroke-linejoin:bevel;stroke-dasharray:1.2, 2.4;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
+       x="-62.775925"
+       y="2.1788399"
+       id="text4310-6"><tspan
+         sodipodi:role="line"
+         id="tspan4308-2"
+         style="font-size:14.1111px;stroke-width:0.6"
+         x="-62.775925"
+         y="2.1788399">MoneyApp Dev Architecture</tspan></text>
+    <rect
+       style="fill:#e3f5fa;fill-opacity:1;stroke:#0ad7e6;stroke-width:0.592506;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1.18501, 2.37004;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
+       id="rect238-8-5-4-7-5-8"
+       width="121.17799"
+       height="124.33863"
+       x="-51.791748"
+       y="24.256485"
+       ry="4.1712279" />
+    <path
+       style="fill:#ffffff;fill-opacity:1;stroke:#9e9e9e;stroke-width:0.600001;stroke-linecap:round;stroke-linejoin:bevel;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
+       d="M 18.348186,103.41904 7.4248398,121.72951"
+       id="path5808" />
+    <path
+       style="fill:#ffffff;fill-opacity:1;stroke:#9e9e9e;stroke-width:0.600001;stroke-linecap:round;stroke-linejoin:bevel;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
+       d="M 7.1248408,96.020521 -27.13553,79.440486"
+       id="path5366" />
+    <path
+       style="fill:#ffffff;fill-opacity:1;stroke:#9e9e9e;stroke-width:0.600001;stroke-linecap:round;stroke-linejoin:bevel;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
+       d="M -24.022544,69.922911 16.607019,48.559159"
+       id="path5364" />
+    <path
+       style="fill:none;fill-opacity:1;stroke:#9e9e9e;stroke-width:0.600001;stroke-linecap:round;stroke-linejoin:bevel;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
+       d="m 32.917788,50.159705 h 30.47571 V 102.10216 H 85.2432"
+       id="path5922" />
+    <path
+       style="fill:none;fill-opacity:1;stroke:#9e9e9e;stroke-width:0.600001;stroke-linecap:round;stroke-linejoin:bevel;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
+       d="m 32.910898,96.020521 7.860726,6e-6 v 9.304813 H 85.2432"
+       id="path5812" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.5861px;font-family:Lato;-inkscape-font-specification:Lato;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.600001;stroke-linecap:round;stroke-linejoin:bevel;stroke-dasharray:1.2, 2.4;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
+       x="-48.440311"
+       y="31.41997"
+       id="text4310-0-1-50"><tspan
+         sodipodi:role="line"
+         id="tspan4308-5-9-12"
+         style="stroke-width:0.6"
+         x="-48.440311"
+         y="31.41997">docker compose</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.5861px;font-family:Lato;-inkscape-font-specification:Lato;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.600001;stroke-linecap:round;stroke-linejoin:bevel;stroke-dasharray:1.2, 2.4;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
+       x="37.752876"
+       y="111.28497"
+       id="text4310-0-1-5-3"><tspan
+         sodipodi:role="line"
+         id="tspan4308-5-9-1-1"
+         style="stroke-width:0.6"
+         x="37.752876"
+         y="111.28497">localhost:8000</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.5861px;font-family:Lato;-inkscape-font-specification:Lato;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.600001;stroke-linecap:round;stroke-linejoin:bevel;stroke-dasharray:1.2, 2.4;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
+       x="34.329678"
+       y="47.541046"
+       id="text4310-0-1-5-3-9"><tspan
+         sodipodi:role="line"
+         id="tspan4308-5-9-1-1-4"
+         style="stroke-width:0.6"
+         x="34.329678"
+         y="47.541046">localhost:16686</tspan></text>
+    <g
+       id="g455"
+       transform="translate(-178.52614,7.4586859)">
+      <rect
+         style="fill:#ffffff;fill-opacity:1;stroke:#5c5c5c;stroke-width:0.6;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
+         id="rect2279-1"
+         width="16.440889"
+         height="12.760079"
+         x="263.63705"
+         y="89.488159"
+         ry="0" />
+      <path
+         style="fill:#ffffff;fill-opacity:1;stroke:#5c5c5c;stroke-width:0.6;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
+         d="m 283.63653,106.84515 h -23.65525 l 3.5586,-4.59691 h 16.53805 z"
+         id="path2281-7" />
+    </g>
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:#5c5c5c;stroke-width:0.759;stroke-linecap:round;stroke-linejoin:bevel;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
+       id="rect5060-2-5-3"
+       width="25.786053"
+       height="23.441866"
+       x="7.1248484"
+       y="84.299591"
+       ry="0" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.5861px;font-family:Lato;-inkscape-font-specification:Lato;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.600001;stroke-linecap:round;stroke-linejoin:bevel;stroke-dasharray:1.2, 2.4;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
+       x="19.931881"
+       y="93.917801"
+       id="text4310-0-5-10-2-4"><tspan
+         sodipodi:role="line"
+         style="text-align:center;text-anchor:middle;stroke-width:0.6"
+         x="19.931881"
+         y="93.917801"
+         id="tspan10664-6">moneyapp</tspan><tspan
+         sodipodi:role="line"
+         style="text-align:center;text-anchor:middle;stroke-width:0.6"
+         x="19.931881"
+         y="99.650429"
+         id="tspan5752">(Django)</tspan></text>
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:#5c5c5c;stroke-width:0.759;stroke-linecap:round;stroke-linejoin:bevel;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
+       id="rect5060-2-5-3-8"
+       width="25.786053"
+       height="23.441866"
+       x="7.1317377"
+       y="38.438774"
+       ry="0" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.5861px;font-family:Lato;-inkscape-font-specification:Lato;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.600001;stroke-linecap:round;stroke-linejoin:bevel;stroke-dasharray:1.2, 2.4;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
+       x="19.93877"
+       y="50.923294"
+       id="text4310-0-5-10-2-4-6"><tspan
+         sodipodi:role="line"
+         style="text-align:center;text-anchor:middle;stroke-width:0.6"
+         x="19.93877"
+         y="50.923294"
+         id="tspan10664-6-9">jaegar</tspan></text>
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:#5c5c5c;stroke-width:0.759;stroke-linecap:round;stroke-linejoin:bevel;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
+       id="rect5060-2-5-3-86"
+       width="25.786053"
+       height="23.441866"
+       x="-42.812176"
+       y="63.35416"
+       ry="0" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.5861px;font-family:Lato;-inkscape-font-specification:Lato;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.600001;stroke-linecap:round;stroke-linejoin:bevel;stroke-dasharray:1.2, 2.4;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
+       x="-30.005123"
+       y="70.506187"
+       id="text4310-0-5-10-2-4-4"><tspan
+         sodipodi:role="line"
+         style="text-align:center;text-anchor:middle;stroke-width:0.6"
+         x="-30.005123"
+         y="70.506187"
+         id="tspan10664-6-6">open</tspan><tspan
+         sodipodi:role="line"
+         style="text-align:center;text-anchor:middle;stroke-width:0.6"
+         x="-30.005123"
+         y="76.238815"
+         id="tspan5748">telemetry</tspan><tspan
+         sodipodi:role="line"
+         style="text-align:center;text-anchor:middle;stroke-width:0.6"
+         x="-30.005123"
+         y="81.971436"
+         id="tspan5750">collector</tspan></text>
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:#5c5c5c;stroke-width:0.759423;stroke-linecap:round;stroke-linejoin:bevel;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
+       id="rect5060-2-5-3-6"
+       width="25.786053"
+       height="23.441866"
+       x="-5.0151315"
+       y="117.66248"
+       ry="0" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.5861px;font-family:Lato;-inkscape-font-specification:Lato;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.600001;stroke-linecap:round;stroke-linejoin:bevel;stroke-dasharray:1.2, 2.4;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
+       x="7.7919135"
+       y="130.14699"
+       id="text4310-0-5-10-2-4-3"><tspan
+         sodipodi:role="line"
+         style="text-align:center;text-anchor:middle;stroke-width:0.6"
+         x="7.7919135"
+         y="130.14699"
+         id="tspan10664-6-3">mysql</tspan></text>
+  </g>
+</svg>

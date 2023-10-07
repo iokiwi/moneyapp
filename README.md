@@ -51,3 +51,9 @@ have your IDE/editor run them automatically.
 ```bash
 pip install -r app/requirements-dev.txt
 ```
+
+## Architecture
+
+### Dev (docker compose)
+
+![Architecture diagram showing the development environment for MoneyApp in docker compose](docs/img/moneyapp-compose-arch.svg)
