@@ -34,7 +34,7 @@
         <a href="{% url 'recurring_expenses:new' %}" class="btn btn-success">Add New</a>
     {% else %}
 
-        <table class="table">
+        <table class="table" id="expense-table">
             <tr>
                 <th>Active</th>
                 <th>Particulars</th>
@@ -68,13 +68,52 @@
         {% endfor %}
         </table>
         <a href="{% url 'recurring_expenses:new' %}" class="btn btn-success">Add New</a>
+        <!-- Export Dropdown -->
+        <div class="btn-group" role="group" aria-label="Export Dropdown">   
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    Export
+                </button>
+                <ul class="dropdown-menu">
+                    <li>
+                        <button class="dropdown-item" href="#" id="export-button">JSON</button>
+                    </li>
+                </ul>
+                </div>
+            </div>
+        </div>
     {% endif %}
 
 </div>
 
-<!-- <script>
+<script>
+    const table = document.getElementById("expense-table");
+    const exportButton = document.getElementById("export-button");
+    const data = [];
+        
+    // Load the table data into an array.
+    for (let i = 1; i < table.rows.length; i++) {
+        const row = table.rows[i];
+        const rowData = {
+            active: row.cells[0].textContent,
+            particulars: row.cells[1].textContent,
+            amount: parseFloat(row.cells[2].textContent),
+            currency: row.cells[3].textContent,
+            amount_nzd: parseFloat(row.cells[4].textContent),
+            period: parseInt(row.cells[5].textContent),
+        };
+        data.push(rowData);
+    }
 
-</script> -->
+    const jsonExporter = new JSONExporter(data); // From FileExporter.js
+    
+    function exportAsJson(){
+        jsonExporter.export();
+    }
 
-
+    exportButton.addEventListener("click", function () {
+        exportAsJson();
+    });
+</script>
+    
 {% endblock %}
