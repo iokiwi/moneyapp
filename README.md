@@ -2,32 +2,41 @@
 
 ![Python Code Style](https://github.com/iokiwi/moneyapp/actions/workflows/code-style.yml/badge.svg)
 
-This is a semi serious app to try real world deployments of several technologies
-including Open Telemetry, HoneyComb, ECS and more.
+This is a semi serious app to try real world deployments of several technologies including Open Telemetry, HoneyComb, ECS and more.
 
-## Docker Dev Environment
+## Quickstart with Docker Dev Environment
+
+Copy the default config files. There's no need to change anything just yet.
 
 ```bash
 cp app/.env.example app/.env
+cp otel-collector-config.yaml.example otel-collector-config.yaml
 ```
 
-Build
+Run the application. If its your first time running the app it will take a couple of minutes while containers get downloaded and built
+
 ```bash
-docker-compose build
+docker-compose up
 ```
 
-Run
+You should be able to access the following services in your browser.
+
+|||
+|---|---|
+|App|http://localhost:8000/|
+|Jaeger UI|http://localhost:16686/|
+
+ * The app container will reload on code changes.
+
+ * This project used structured logging which can be seen in the console and is also exposed in a shiny web ui.
+
+### More helpful operations
+
+Rebuild app container manually
+
 ```bash
-docker-compose up -d
+docker-compose build app
 ```
-
-The app container will reload on code changes
-
-App:
-  * http://localhost:8000/
-
-Jaeger UI:
-  * http://localhost:16686/
 
 ## Contributing
 
