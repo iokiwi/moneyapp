@@ -33,6 +33,6 @@ service:
       processors: [batch]
       exporters:
        - debug
-       - jaeger
+       - otlp/jaeger
       #  - otlp
       #  - awsxray
