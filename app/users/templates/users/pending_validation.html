@@ -2,9 +2,17 @@
 
 {% block content %}
 
-    <div class="container">
-        <p>We sent a magic link. Check your email.</p>
-        <p>If you don't see it, check your spam/junk folder.</p>
+<div class="container d-flex align-items-center justify-content-center" style="height: 80vh">
+
+    <div class="col-md-4 col-sm-12">
+        <p class="text-center">If the account exists, we sent a magic link. Check your inbox.</p>
+        <p class="text-center">Don't forget to check your spam/junk folder.</p>
+
+        {% if magic_link %}
+        Your sneaky dev link: <a class="text-center" href="{{ magic_link }}">{{ magic_link }}</a>
+        {% endif %}
     </div>
+
+</div>
 
 {% endblock %}
