@@ -30,7 +30,7 @@ SECRET_KEY = os.environ["SECRET_KEY"]
 
 OTEL_EXPORTER = os.environ.get("OTEL_EXPORTER", "console")
 OTEL_SERVICE_NAME = os.environ.get("OTEL_SERVICE_NAME", "moneyapp-dev")
-OTEL_OTLP_ENDPOINT = os.environ.get("OTEL_OTLP_ENDPOINT", "http://localhost:4317")
+OTEL_OTLP_ENDPOINT = os.environ.get("OTEL_OTLP_ENDPOINT", "http://otel-collector:4317")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(os.environ.get("DEBUG", False))

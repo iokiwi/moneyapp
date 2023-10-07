@@ -45,6 +45,7 @@ def send_email(user, link):
 
 class EmailLoginView(FormView):
     template_name = "users/email_login.html"
+    success_url = "/accounts/pending"
     form_class = EmailLoginForm
 
     def form_valid(self, form):
@@ -67,6 +68,7 @@ class EmailLoginView(FormView):
 class UserRegistrationFormView(FormView):
     template_name = "users/register.html"
     form_class = UserRegistrationForm
+    success_url = "/accounts/pending"
 
     def form_valid(self, form):
         email = form.cleaned_data["email"]
