@@ -126,9 +126,12 @@ def create_recurring_expense(request):
 @login_required
 def export_recurring_expenses(request):
     if "csv" in request.GET["format"]:
+        response_file="recurring_expenses.csv"
         response = HttpResponse(
             content_type="text/csv",
-            headers={"Content-Disposition": 'attachment; filename="recurring_expenses.csv"'},
+            headers={
+                "Content-Disposition": 'attachment; filename="'+response_file+'"'
+            },
         )
         writer = csv.writer(response)
         writer.writerow([
@@ -147,8 +150,8 @@ def export_recurring_expenses(request):
             amount_nzd = (1 / fx_rates[expense.currency]) * float(expense.amount)
             expense.amount_nzd = amount_nzd
             writer.writerow([
-                expense.active, expense.particulars, format(expense.amount,".2f"),
-                expense.currency, format(expense.amount_nzd,".2f"), expense.period,
+                expense.active, expense.particulars, format(expense.amount, ".2f"),
+                expense.currency, format(expense.amount_nzd, ".2f"), expense.period,
             ])
     else:
         response = HttpResponse(status=204)
