@@ -126,11 +126,11 @@ def create_recurring_expense(request):
 @login_required
 def export_recurring_expenses(request):
     if "csv" in request.GET["format"]:
-        response_file="recurring_expenses.csv"
+        filename="recurring_expenses.csv"
         response = HttpResponse(
             content_type="text/csv",
             headers={
-                "Content-Disposition": 'attachment; filename="'+response_file+'"'
+                "Content-Disposition": 'attachment; filename="' + filename + '"'
             },
         )
         writer = csv.writer(response)
