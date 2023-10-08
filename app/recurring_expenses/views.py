@@ -126,7 +126,7 @@ def create_recurring_expense(request):
 @login_required
 def export_recurring_expenses(request):
     if "csv" in request.GET["format"]:
-        filename="recurring_expenses.csv"
+        filename = "recurring_expenses.csv"
         response = HttpResponse(
             content_type="text/csv",
             headers={
