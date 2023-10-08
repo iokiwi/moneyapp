@@ -67,7 +67,18 @@
             </tr>
         {% endfor %}
         </table>
-        <a href="{% url 'recurring_expenses:new' %}" class="btn btn-success">Add New</a>
+        <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+            <a href="{% url 'recurring_expenses:new' %}" class="btn btn-success">Add New</a>
+            
+            <div class="btn-group" role="group">
+              <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                Export
+              </button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{% url 'recurring_expenses:export' %}?format=csv">CSV</a></li>
+              </ul>
+            </div>
+        </div>
     {% endif %}
 
 </div>
