@@ -6,7 +6,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from django.shortcuts import render
 from django.views import generic
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.views import View
 from django.contrib import messages
 from django.urls import reverse
@@ -121,6 +121,53 @@ def create_recurring_expense(request):
         form = RecurringExpenseForm()
 
     return render(request, "recurring_expenses/new.html", {"form": form})
+
+
+@login_required
+def export_recurring_expenses(request):
+    export_format = request.GET.get("format", "csv")
+    if "csv" in export_format.lower():
+        filename = "recurring_expenses.csv"
+        response = HttpResponse(
+            content_type="text/csv",
+            headers={"Content-Disposition": 'attachment; filename="' + filename + '"'},
+        )
+        writer = csv.writer(response)
+        writer.writerow(
+            [
+                "Active",
+                "Particulars",
+                "Amount",
+                "Currency",
+                "Amount NZD",
+                "Period (Months)",
+            ]
+        )
+        #
+        # Get expenses and amount in NZD
+        # Copied from class IndexView, maybe this should be a function?
+        # Exporting each expense to csv within this though so we don't
+        # have to run the for loop twice
+        #
+        fx_rates = get_fxRate_nzd()
+        expenses = RecurringExpense.objects.all()
+        for expense in expenses:
+            amount_nzd = (1 / fx_rates[expense.currency]) * float(expense.amount)
+            expense.amount_nzd = amount_nzd
+            writer.writerow(
+                [
+                    expense.active,
+                    expense.particulars,
+                    format(expense.amount, ".2f"),
+                    expense.currency,
+                    format(expense.amount_nzd, ".2f"),
+                    expense.period,
+                ]
+            )
+    else:
+        response = HttpResponse(status=204)
+
+    return response
 
 
 class IndexView(LoginRequiredMixin, generic.TemplateView):
