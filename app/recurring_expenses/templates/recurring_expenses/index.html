@@ -30,8 +30,10 @@
     -->
 
     {% if not recurring_expenses %}
+    <div class="col-md-12 text-center">
         <p style="text-align: center;">Add some recurring expenses to get started</p>
-        <a href="{% url 'recurring_expenses:new' %}" class="btn btn-success">Add New</a>
+        <a  href="{% url 'recurring_expenses:new' %}" class="btn btn-success">Add New</a>
+    </div>
     {% else %}
 
         <table class="table">
