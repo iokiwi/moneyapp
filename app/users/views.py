@@ -42,16 +42,17 @@ def send_email(user, link):
 
         You've requested a secure login link to access our app:
 
-        **IMPORTANT SECURITY REMINDERS:**
+        IMPORTANT SECURITY REMINDERS:
+         * Do not share this link it with anyone.
+         * Our administrators will never ask you to share your magic login link.
 
-        - Please treat this link like a secret key. Do not share it with anyone.
-        - Our administrators will **never** ask you to reveal or share your magic login link.
+        To log in, simply click the following link:
 
-        To log in, simply click the following link: {link}
+            {link}
 
         Your online security and privacy are our top priorities.
 
-        Best regards,
+        Best Regards,
         The MoneyApp Team
         """,
     )
