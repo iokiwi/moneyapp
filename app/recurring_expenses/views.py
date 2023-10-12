@@ -1,4 +1,5 @@
 import csv
+import json
 import requests
 
 from django.contrib.auth.decorators import login_required
@@ -123,51 +124,87 @@ def create_recurring_expense(request):
     return render(request, "recurring_expenses/new.html", {"form": form})
 
 
-@login_required
-def export_recurring_expenses(request):
-    export_format = request.GET.get("format", "csv")
-    if "csv" in export_format.lower():
-        filename = "recurring_expenses.csv"
-        response = HttpResponse(
-            content_type="text/csv",
-            headers={"Content-Disposition": 'attachment; filename="' + filename + '"'},
-        )
-        writer = csv.writer(response)
+_EXPORT_FORMATS = [
+    "csv",
+    "json",
+]
+
+
+def export_to_csv(expenses):
+    filename = "recurring_expenses.csv"
+    fx_rates = get_fxRate_nzd()
+    response = HttpResponse(
+        content_type="text/csv",
+        headers={"Content-Disposition": 'attachment; filename="' + filename + '"'},
+    )
+    writer = csv.writer(response)
+    writer.writerow(
+        [
+            "Active",
+            "Particulars",
+            "Amount",
+            "Currency",
+            "Amount NZD",
+            "Period (Months)",
+        ]
+    )
+    for expense in expenses:
+        amount_nzd = (1 / fx_rates[expense.currency]) * float(expense.amount)
+        expense.amount_nzd = amount_nzd
         writer.writerow(
             [
-                "Active",
-                "Particulars",
-                "Amount",
-                "Currency",
-                "Amount NZD",
-                "Period (Months)",
+                expense.active,
+                expense.particulars,
+                format(expense.amount, ".2f"),
+                expense.currency,
+                format(expense.amount_nzd, ".2f"),
+                expense.period,
             ]
         )
-        #
-        # Get expenses and amount in NZD
-        # Copied from class IndexView, maybe this should be a function?
-        # Exporting each expense to csv within this though so we don't
-        # have to run the for loop twice
-        #
-        fx_rates = get_fxRate_nzd()
-        expenses = RecurringExpense.objects.all()
-        for expense in expenses:
-            amount_nzd = (1 / fx_rates[expense.currency]) * float(expense.amount)
-            expense.amount_nzd = amount_nzd
-            writer.writerow(
-                [
-                    expense.active,
-                    expense.particulars,
-                    format(expense.amount, ".2f"),
-                    expense.currency,
-                    format(expense.amount_nzd, ".2f"),
-                    expense.period,
-                ]
-            )
-    else:
-        response = HttpResponse(status=204)
-
     return response
+
+
+def export_to_json(expenses):
+    data = []
+    fx_rates = get_fxRate_nzd()
+    for expense in expenses:
+        amount_nzd = (1 / fx_rates[expense.currency]) * float(expense.amount)
+        expense.amount_nzd = amount_nzd
+        data.append({
+            "Active": expense.active,
+            "Particulars": expense.particulars,
+            "Amount": format(expense.amount, ".2f"),
+            "Currency": expense.currency,
+            "Amount NZD": format(expense.amount_nzd, ".2f"),
+            "Period (Months)": expense.period,
+        })
+
+    json_data = json.dumps(data, indent=4)
+
+    response = HttpResponse(
+        content_type="application/json",
+        headers={
+            "Content-Disposition": 'attachment; filename="recurring_expenses.json"'
+        },
+    )
+    response.write(json_data)
+    return response
+
+
+@login_required
+def export_recurring_expenses(request, export_format):
+    # Assuring that the url parameter is not case-sensitive.
+    export_format = export_format.lower()
+
+    if export_format not in _EXPORT_FORMATS:
+        return HttpResponse(status=204)
+
+    expenses = RecurringExpense.objects.all()
+    if export_format == "csv":
+        return export_to_csv(expenses)
+
+    elif export_format == "json":
+        return export_to_json(expenses)
 
 
 class IndexView(LoginRequiredMixin, generic.TemplateView):
@@ -181,6 +218,7 @@ class IndexView(LoginRequiredMixin, generic.TemplateView):
             amount_nzd = (1 / fx_rates[expense.currency]) * float(expense.amount)
             expense.amount_nzd = amount_nzd
         context["recurring_expenses"] = expenses
+        context["export_formats"] = _EXPORT_FORMATS
         return context
 
 

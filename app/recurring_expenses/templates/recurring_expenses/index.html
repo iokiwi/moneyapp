@@ -77,7 +77,11 @@
                 Export
               </button>
               <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="{% url 'recurring_expenses:export' %}?format=csv">CSV</a></li>
+                {% for format in export_formats %}
+                    <li>
+                        <a class="dropdown-item" href="{% url 'recurring_expenses:export' format%}">{{format.upper}}</a>
+                    </li>
+                {% endfor %}
               </ul>
             </div>
         </div>
