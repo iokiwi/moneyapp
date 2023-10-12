@@ -36,15 +36,23 @@ def get_magic_link(request, user):
 def send_email(user, link):
     """Send an email with this login link to this user."""
     user.email_user(
-        subject="[django-sesame] Log in to our app",
+        subject="[MoneyApp] Log in to our app",
         message=f"""\
         Hello,
 
-        You requested that we send you a link to log in to our app:
+        You've requested a secure login link to access our app:
 
-            {link}
+        **IMPORTANT SECURITY REMINDERS:**
 
-        Thank you for using django-sesame!
+        - Please treat this link like a secret key. Do not share it with anyone.
+        - Our administrators will **never** ask you to reveal or share your magic login link.
+
+        To log in, simply click the following link: {link}
+
+        Your online security and privacy are our top priorities.
+
+        Best regards,
+        The MoneyApp Team
         """,
     )
 
