@@ -170,14 +170,16 @@ def export_to_json(expenses):
     for expense in expenses:
         amount_nzd = (1 / fx_rates[expense.currency]) * float(expense.amount)
         expense.amount_nzd = amount_nzd
-        data.append({
-            "Active": expense.active,
-            "Particulars": expense.particulars,
-            "Amount": format(expense.amount, ".2f"),
-            "Currency": expense.currency,
-            "Amount NZD": format(expense.amount_nzd, ".2f"),
-            "Period (Months)": expense.period,
-        })
+        data.append(
+            {
+                "Active": expense.active,
+                "Particulars": expense.particulars,
+                "Amount": format(expense.amount, ".2f"),
+                "Currency": expense.currency,
+                "Amount NZD": format(expense.amount_nzd, ".2f"),
+                "Period (Months)": expense.period,
+            }
+        )
 
     json_data = json.dumps(data, indent=4)
 
