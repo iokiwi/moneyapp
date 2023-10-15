@@ -1,25 +1,27 @@
 import csv
 import json
-import requests
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views import generic
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views import View
 from django.contrib import messages
 from django.urls import reverse
 
+from moneyapp.helpers import parse_bool
+
+from datetime import datetime
+
 from .models import RecurringExpense
 from .forms import RecurringExpenseForm
 
-
-def get_fxRate_nzd():
-    url = "https://api.exchangerate-api.com/v4/latest/NZD"
-    response = requests.request("GET", url)
-    return response.json()["rates"]
+EXPORT_FORMATS = [
+    "csv",
+    "json",
+]
 
 
 @login_required
@@ -35,14 +37,6 @@ def create_or_edit_recurring_expense(request, expense_id=None):
         create_recurring_expense(request)
     else:
         edit_recurring_expense(request, expense_id=expense_id)
-
-
-def parse_bool(s):
-    if s.lower() == "true":
-        return True
-    if s.lower() == "false":
-        return False
-    raise ValueError("Cannot parse boolean from {}".format(s))
 
 
 @login_required
@@ -124,35 +118,34 @@ def create_recurring_expense(request):
     return render(request, "recurring_expenses/new.html", {"form": form})
 
 
-_EXPORT_FORMATS = [
-    "csv",
-    "json",
-]
+def get_filename(format):
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    return "recurring_expenses_{}.{}".format(timestamp, format.lower())
 
 
 def export_to_csv(expenses):
-    filename = "recurring_expenses.csv"
-    fx_rates = get_fxRate_nzd()
+    filename = get_filename("csv")
     response = HttpResponse(
         content_type="text/csv",
-        headers={"Content-Disposition": 'attachment; filename="' + filename + '"'},
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
     )
     writer = csv.writer(response)
     writer.writerow(
         [
-            "Active",
-            "Particulars",
-            "Amount",
-            "Currency",
-            "Amount NZD",
-            "Period (Months)",
+            "id",
+            "active",
+            "particulars",
+            "amount",
+            "currency",
+            "amount_nzd",
+            "period",
         ]
     )
+
     for expense in expenses:
-        amount_nzd = (1 / fx_rates[expense.currency]) * float(expense.amount)
-        expense.amount_nzd = amount_nzd
         writer.writerow(
             [
+                expense.id,
                 expense.active,
                 expense.particulars,
                 format(expense.amount, ".2f"),
@@ -161,33 +154,30 @@ def export_to_csv(expenses):
                 expense.period,
             ]
         )
-    return response
+        return response
 
 
 def export_to_json(expenses):
     data = []
-    fx_rates = get_fxRate_nzd()
+    filename = get_filename("json")
     for expense in expenses:
-        amount_nzd = (1 / fx_rates[expense.currency]) * float(expense.amount)
-        expense.amount_nzd = amount_nzd
         data.append(
             {
-                "Active": expense.active,
-                "Particulars": expense.particulars,
-                "Amount": format(expense.amount, ".2f"),
-                "Currency": expense.currency,
-                "Amount NZD": format(expense.amount_nzd, ".2f"),
-                "Period (Months)": expense.period,
+                "id": str(expense.id),
+                "active": expense.active,
+                "particulars": expense.particulars,
+                "amount": format(expense.amount, ".2f"),
+                "currency": expense.currency,
+                "amount_nzd": format(expense.amount_nzd, ".2f"),
+                "period": expense.period,
             }
         )
 
-    json_data = json.dumps(data, indent=4)
+    json_data = json.dumps(data)
 
     response = HttpResponse(
         content_type="application/json",
-        headers={
-            "Content-Disposition": 'attachment; filename="recurring_expenses.json"'
-        },
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
     )
     response.write(json_data)
     return response
@@ -198,13 +188,13 @@ def export_recurring_expenses(request, export_format):
     # Assuring that the url parameter is not case-sensitive.
     export_format = export_format.lower()
 
-    if export_format not in _EXPORT_FORMATS:
-        return HttpResponse(status=204)
+    if export_format not in EXPORT_FORMATS:
+        messages.error(request, f"{export_format} is not a valid format")
+        return redirect("recurring_expenses:index")
 
     expenses = RecurringExpense.objects.all()
     if export_format == "csv":
         return export_to_csv(expenses)
-
     elif export_format == "json":
         return export_to_json(expenses)
 
@@ -214,13 +204,13 @@ class IndexView(LoginRequiredMixin, generic.TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        fx_rates = get_fxRate_nzd()
         expenses = RecurringExpense.objects.all()
+
         for expense in expenses:
-            amount_nzd = (1 / fx_rates[expense.currency]) * float(expense.amount)
-            expense.amount_nzd = amount_nzd
+            print(expense.amount_nzd)
+
         context["recurring_expenses"] = expenses
-        context["export_formats"] = _EXPORT_FORMATS
+        context["export_formats"] = EXPORT_FORMATS
         return context
 
 

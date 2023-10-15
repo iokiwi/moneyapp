@@ -9,17 +9,9 @@ class RecurringExpenseForm(ModelForm):
         model = RecurringExpense
         fields = ("particulars", "amount", "currency", "period", "active")
         widgets = {
-            "particulars": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "Netflix"}
-            ),
-            "amount": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "24.99"}
-            ),
-            "currency": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "NZD"}
-            ),
-            "period": forms.NumberInput(
-                attrs={"class": "form-control", "placeholder": "1"}
-            ),
+            "particulars": forms.TextInput(attrs={"class": "form-control"}),
+            "amount": forms.TextInput(attrs={"class": "form-control"}),
+            "currency": forms.TextInput(attrs={"class": "form-control"}),
+            "period": forms.NumberInput(attrs={"class": "form-control"}),
             "active": forms.CheckboxInput(attrs={"class": "form-check-input"}),
         }

@@ -3,27 +3,6 @@
 {% block content %}
 
 <div class="container">
-    {% if messages %}
-        {% for message in messages %}
-            {% if 'error' in message.tags %}
-                <div class="alert alert-danger" role="alert">
-                    {{ message }}
-                </div>
-            {% endif %}
-            {% if 'success' in message.tags %}
-                <div class="alert alert-success" role="alert">
-                    {{ message }}
-                </div>
-            {% endif %}
-            {% if 'info' in message.tags %}
-            <div class="alert alert-info" role="alert">
-                {{ message }}
-            </div>
-        {% endif %}
-        {% endfor %}
-    {% endif %}
-
-
     <p>
         Transaction imports are always idempotent. Existing transactions will not be overwritten, updated or duplicated.
     </p>
