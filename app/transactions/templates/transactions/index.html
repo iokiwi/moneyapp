@@ -58,6 +58,53 @@
         </tr>
         {% endfor %}
     </table>
+    <div class="row">
+        <nav aria-label="transactions pagination">
+            <ul class="pagination justify-content-center">
+                    {% if transactions.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1">first</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ transactions.previous_page_number }}">previous</a>
+                    </li>
+                    {% endif %}
+                    
+                    <!-- <li class="current-page page-item">
+                        <a class="page-link">{{ transactions.number }}/{{ transactions.paginator.num_pages }}</a>
+                    </li> -->
+                    {% if transactions.number > 5 %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1">1</a>
+                    </li>
+                    {% endif %}
+        
+                    {% for i in transactions.paginator.page_range %}
+                    {% if i > transactions.number|add:'-4' and i < transactions.number|add:'4' %}
+                    <li class="page-item {% if transactions.number == i %}active{% endif %}">
+                        <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                    </li>
+                    {% endif %}
+                    {% endfor %}
+        
+                    {% if transactions.number < transactions.paginator.num_pages|add:'-4' %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ transactions.paginator.num_pages }}">{{ transactions.paginator.num_pages }}</a>
+                    </li>
+                    {% endif %}
+
+                    
+                    {% if transactions.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ transactions.next_page_number }}">next</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ transactions.paginator.num_pages }}">last</a>
+                    </li>
+                    {% endif %}
+            </ul>
+        </nav>
+    </div>
 {% else %}
     <p style="text-align: center;">You don't have any transactions yet.</p>
     <a style="text-align: center;" class="btn btn-success" href="{% url 'transactions:import' %}">Import</a>
