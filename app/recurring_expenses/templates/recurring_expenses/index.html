@@ -7,91 +7,63 @@
 
     <h1>Recurring Expenses</h1>
 
-    <!--
-    <form>
-        <div class="row">
-            <div class="col-sm-4">
-                <input type="text" class="form-control" placeholder="Particulars" name="particulars">
-            </div>
-            <div class="col-sm-2">
-                <input type="text" class="form-control" placeholder="Amount" name="amount">
-            </div>
-            <div class="col-sm-2">
-                <input type="text" class="form-control" placeholder="NZD" name="currency">
-            </div>
-            <div class="col-sm-2">
-                <input type="text" class="form-control" placeholder="1" name="period">
-            </div>
-            <div class="col-sm-2">
-                <button type="submit" class="btn btn-success">Add</button>
-            </div>
-        </div>
-    </form>
-    -->
-
     {% if not recurring_expenses %}
     <div class="col-md-12 text-center">
         <p style="text-align: center;">Add some recurring expenses to get started</p>
-        <a  href="{% url 'recurring_expenses:new' %}" class="btn btn-success">Add New</a>
+        <a href="{% url 'recurring_expenses:new' %}" class="btn btn-success">Add New</a>
     </div>
     {% else %}
+    <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+        <a href="{% url 'recurring_expenses:new' %}" class="btn btn-success">Add New</a>
 
-        <table class="table">
-            <tr>
-                <th>Active</th>
-                <th>Particulars</th>
-                <th>Amount</th>
-                <th>Currency</th>
-                <th>Amount NZD</th>
-                <th>Period (Months)</th>
-                <th></th>
-                <th></th>
-            </tr>
-        {% for expense in recurring_expenses %}
-            {% if expense.active == False %}
-                <tr style="color: darkgrey; background-color: lightgrey;">
-            {% else %}
-                <tr>
-            {% endif %}
-                <td>{{ expense.active }}</td>
-                <td>{{ expense.particulars }}</td>
-                <td>{{ expense.amount|floatformat:2 }}</td>
-                <td>{{ expense.currency }}</td>
-                <td>{{ expense.amount_nzd|floatformat:2 }}</td>
-                <td>{{ expense.period }}</td>
-
-                <td>
-                    <a href="{% url 'recurring_expenses:edit' expense.id %}"><i class="bi bi-pencil"></i></a>
-                </td>
-                <td>
-                    <a href="{% url 'recurring_expenses:delete' expense.id %}"><i class="bi bi-x-circle"></i></a>
-                </td>
-            </tr>
-        {% endfor %}
-        </table>
-        <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-            <a href="{% url 'recurring_expenses:new' %}" class="btn btn-success">Add New</a>
-            
-            <div class="btn-group" role="group">
-              <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+        <div class="btn-group" role="group">
+            <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown"
+                aria-expanded="false">
                 Export
-              </button>
-              <ul class="dropdown-menu">
+            </button>
+            <ul class="dropdown-menu">
                 {% for format in export_formats %}
-                    <li>
-                        <a class="dropdown-item" href="{% url 'recurring_expenses:export' format%}">{{format.upper}}</a>
-                    </li>
+                <li>
+                    <a class="dropdown-item" href="{% url 'recurring_expenses:export' format%}">{{format.upper}}</a>
+                </li>
                 {% endfor %}
-              </ul>
-            </div>
+            </ul>
         </div>
+    </div>
+    <table class="table">
+        <tr>
+            <!-- <th>Active</th> -->
+            <th>Particulars</th>
+            <th>Amount</th>
+            <th>Currency</th>
+            <th>Amount NZD</th>
+            <th>Period (Months)</th>
+            <th></th>
+            <th></th>
+        </tr>
+        {% for expense in recurring_expenses %}
+        {% if expense.active == False %}
+        <tr style="color: darkgrey; background-color: lightgrey;">
+            {% else %}
+        <tr>
+            {% endif %}
+            <!-- <td>{{ expense.active }}</td> -->
+            <td>{{ expense.particulars }}</td>
+            <td>{{ expense.amount|floatformat:2 }}</td>
+            <td>{{ expense.currency }}</td>
+            <td>{{ expense.amount_nzd|floatformat:2 }}</td>
+            <td>{{ expense.period }}</td>
+
+            <td>
+                <a href="{% url 'recurring_expenses:edit' expense.id %}"><i class="bi bi-pencil"></i></a>
+            </td>
+            <td>
+                <a href="{% url 'recurring_expenses:delete' expense.id %}"><i class="bi bi-x-circle"></i></a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
     {% endif %}
 
 </div>
-
-<!-- <script>
-
-</script> -->
-
-
 {% endblock %}

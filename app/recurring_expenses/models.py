@@ -1,6 +1,47 @@
+import requests
+
 from django.db import models
 from uuid import uuid4
 from bank_accounts.models import BankAccount
+from moneyapp.helpers import parse_bool
+from memoize import memoize
+
+
+# TODO(caching exchange rates)
+# from django.core.cache import cache
+# https://docs.djangoproject.com/en/4.2/topics/cache/=
+
+
+def invert_rates(rates):
+    return {k: 1 / v for k, v in rates.items()}
+
+
+@memoize(timeout=60 * 60)  # cache for 1 hour
+def get_exchange_rates(target_currency="NZD"):
+    # Note, the API gives us from NZD -> everything so
+    # we invert it to get everything -> NZD
+    url = f"https://api.exchangerate-api.com/v4/latest/{target_currency}"
+    response = requests.get(url)
+    return invert_rates(response.json()["rates"])
+
+
+def get_exchange_rate(currency_from, currency_to="NZD"):
+    # TODO: Caching
+    # https://docs.djangoproject.com/en/4.2/topics/cache/
+
+    # rate = cache.get(currency_from)
+    # # Update cache if miss
+    # if rate is None:
+    #     print("cache miss")
+    #     rates = get_exchange_rates()
+    #     for k, v in rates.items():
+    #         # Store the rate in cache for 12 hours
+    #         key = f"{k}{currency_to}"
+    #         cache.set(key, rate, 60 * 60 * 12)
+    # else:
+    #     print("cache hit")
+
+    return get_exchange_rates(currency_to)[currency_from]
 
 
 class RecurringExpense(models.Model):
@@ -14,6 +55,11 @@ class RecurringExpense(models.Model):
         BankAccount, on_delete=models.SET_NULL, null=True, blank=True
     )
 
+    @property
+    def amount_nzd(self):
+        fx_rate = get_exchange_rate(self.currency)
+        return float(self.amount) * fx_rate
+
     def __str__(self):
         return "RecurringExpense({})".format(
             str(
@@ -24,6 +70,7 @@ class RecurringExpense(models.Model):
                     "amount": self.amount,
                     "currency": self.currency,
                     "period": self.period,
+                    "amount_nzd": self.amount_nzd,
                 }
             )
         )
