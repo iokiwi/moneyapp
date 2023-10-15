@@ -7,6 +7,7 @@ from django.db.models import Sum, Count, Avg
 from django.http import HttpResponseRedirect
 from django.db import IntegrityError
 from django.contrib import messages
+from django.core.paginator import Paginator
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
@@ -35,6 +36,15 @@ class IndexView(LoginRequiredMixin, generic.TemplateView):
         if "account" in self.request.GET:
             transactions = transactions.filter(account__id=self.request.GET["account"])
 
+        # Create a Paginator object with 25 items per page
+        paginator = Paginator(transactions.order_by("-date"), 25)
+
+        # Get the current page number from the request's GET parameters
+        page_number = self.request.GET.get("page")
+
+        # Get the Page object for the current page number
+        page_obj = paginator.get_page(page_number)
+
         context["aggregate_stats"] = self.get_transaction_stats(transactions)
         context["debit_stats"] = self.get_transaction_stats(
             [t for t in transactions if t.amount < 0]
@@ -42,7 +52,8 @@ class IndexView(LoginRequiredMixin, generic.TemplateView):
         context["credit_stats"] = self.get_transaction_stats(
             [t for t in transactions if t.amount > 0]
         )
-        context["transactions"] = transactions.order_by("-date")
+
+        context["transactions"] = page_obj
 
         return context
 
