@@ -4,26 +4,6 @@
 
 <div class="container">
 
-    {% if messages %}
-        {% for message in messages %}
-            {% if 'error' in message.tags %}
-                <div class="alert alert-danger" role="alert">
-                    {{ message }}
-                </div>
-            {% endif %}
-            {% if 'success' in message.tags %}
-                <div class="alert alert-success" role="alert">
-                    {{ message }}
-                </div>
-            {% endif %}
-            {% if 'info' in message.tags %}
-            <div class="alert alert-info" role="alert">
-                {{ message }}
-            </div>
-        {% endif %}
-        {% endfor %}
-    {% endif %}
-
     <h1>Import Recurring Expenses</h1>
 
     <form action="{% url 'recurring_expenses:import' %}" method="post" enctype="multipart/form-data">
