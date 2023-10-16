@@ -41,8 +41,8 @@ def create_or_edit_recurring_expense(request, expense_id=None):
 
 
 _IMPORT_CONTENT_KEYS = {
-    'json': 'application/json',
-    'csv': 'text/csv',
+    "json": "application/json",
+    "csv": "text/csv",
 }
 
 _IMPORT_CONTENT_TYPES = {value: key for key, value in _IMPORT_CONTENT_KEYS.items()}
@@ -67,15 +67,12 @@ def upload_json_date(data: dict):
     for item in data:
         try:
             recurring_expense = RecurringExpense(
-                id=item["id"]
-                if 'id' in item
-                else None,
-
+                id=item["id"] if "id" in item else None,
                 active=item["active"],
                 particulars=item["particulars"],
                 amount=item["amount"],
                 currency=item["currency"],
-                period=item["period"]
+                period=item["period"],
             )
             recurring_expense.save()
         except KeyError:
@@ -126,10 +123,10 @@ def import_recurring_expenses(request):
                 messages.error(request, "Invalid file type")
                 return HttpResponseRedirect(reverse("recurring_expenses:import"))
 
-            if uploaded_file.content_type == _IMPORT_CONTENT_KEYS['json']:
+            if uploaded_file.content_type == _IMPORT_CONTENT_KEYS["json"]:
                 data = load_json_data(uploaded_file)
                 upload_json_date(data)
-            elif uploaded_file.content_type == _IMPORT_CONTENT_KEYS['csv']:
+            elif uploaded_file.content_type == _IMPORT_CONTENT_KEYS["csv"]:
                 reader = load_csv_data(uploaded_file)
                 upload_csv_data(reader)
 
