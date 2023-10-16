@@ -8,3 +8,4 @@ requests >= 2.31.0
 opentelemetry-sdk >= 1.19.0
 opentelemetry-instrumentation-django >= 0.40b0
 opentelemetry-exporter-otlp-proto-grpc >= 1.19.0
+django-memoize >= 2.3.1

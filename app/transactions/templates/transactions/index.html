@@ -58,7 +58,8 @@
         </tr>
         {% endfor %}
     </table>
-    <div class="d-flex justify-content-middle">
+
+    <div class="d-flex justify-content-center">
         <nav aria-label="pagination for transactions">
             <ul class="pagination">
                 {% if transactions.has_previous %}
@@ -97,7 +98,8 @@
             </ul>
         </nav>        
     </div>
-    <div class="d-flex justify-content-middle">
+
+    <div class="d-flex justify-content-center">
         <span class="page-link">{{ transactions.number }} of {{ transactions.paginator.num_pages }}</span>
     </div>
 {% else %}

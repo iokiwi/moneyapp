@@ -41,6 +41,7 @@ ALLOWED_HOSTS = ["*"]
 
 # Application definition
 INSTALLED_APPS = [
+    "memoize",
     "moneyapp",
     "telemetry.apps.TelemetryConfig",
     "users.apps.UsersConfig",
