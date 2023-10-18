@@ -11,6 +11,7 @@ from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadReque
 from django.views import View
 from django.contrib import messages
 from django.urls import reverse
+from django.db.utils import IntegrityError
 
 from moneyapp.helpers import parse_bool
 
@@ -40,12 +41,12 @@ def create_or_edit_recurring_expense(request, expense_id=None):
         edit_recurring_expense(request, expense_id=expense_id)
 
 
-_IMPORT_CONTENT_KEYS = {
+IMPORT_CONTENT_KEYS = {
     "json": "application/json",
     "csv": "text/csv",
 }
 
-_IMPORT_CONTENT_TYPES = {value: key for key, value in _IMPORT_CONTENT_KEYS.items()}
+IMPORT_CONTENT_TYPES = {value: key for key, value in IMPORT_CONTENT_KEYS.items()}
 
 
 def load_json_data(file):
@@ -63,11 +64,11 @@ def load_csv_data(file):
         raise ValueError("Invalid CSV data in the file.")
 
 
-def upload_json_date(data: dict):
+def upload_json_data(data: dict):
     for item in data:
         try:
             recurring_expense = RecurringExpense(
-                id=item["id"] if "id" in item else None,
+                id=item.get("id", None),
                 active=item["active"],
                 particulars=item["particulars"],
                 amount=item["amount"],
@@ -82,7 +83,6 @@ def upload_json_date(data: dict):
 def upload_csv_data(reader):
     next(reader, None)
     rows_imported = 0
-    rows_errored = 0
     total_rows = 0
 
     for row in reader:
@@ -91,20 +91,17 @@ def upload_csv_data(reader):
 
         total_rows += 1
 
-        try:
-            recurring_expense = RecurringExpense(
-                id=UUID(row[0]) if row[0] else None,
-                active=parse_bool(row[1]),
-                particulars=row[2].strip(" "),
-                amount=row[3].strip("$  "),
-                period=int(row[6]),
-                currency=row[4].strip(" "),
-            )
-            recurring_expense.save()
-            rows_imported += 1
-        except Exception as e:
-            rows_errored += 1
-            raise ValueError(str(e))
+        # try:
+        recurring_expense = RecurringExpense(
+            id=UUID(row[0]) if row[0] else None,
+            active=parse_bool(row[1]),
+            particulars=row[2].strip(" "),
+            amount=row[3].strip("$  "),
+            period=int(row[6]),
+            currency=row[4].strip(" "),
+        )
+        recurring_expense.save()
+        rows_imported += 1
 
 
 @login_required
@@ -119,20 +116,27 @@ def import_recurring_expenses(request):
                 messages.error(request, "No file uploaded")
                 return HttpResponseRedirect(reverse("recurring_expenses:import"))
 
-            if uploaded_file.content_type not in _IMPORT_CONTENT_TYPES:
+            if uploaded_file.content_type not in IMPORT_CONTENT_TYPES:
                 messages.error(request, "Invalid file type")
                 return HttpResponseRedirect(reverse("recurring_expenses:import"))
 
-            if uploaded_file.content_type == _IMPORT_CONTENT_KEYS["json"]:
+            if uploaded_file.content_type == IMPORT_CONTENT_KEYS["json"]:
                 data = load_json_data(uploaded_file)
-                upload_json_date(data)
-            elif uploaded_file.content_type == _IMPORT_CONTENT_KEYS["csv"]:
+                upload_json_data(data)
+            elif uploaded_file.content_type == IMPORT_CONTENT_KEYS["csv"]:
                 reader = load_csv_data(uploaded_file)
                 upload_csv_data(reader)
 
             # Redirect to a success page or do something else
             messages.success(request, "Recurring expenses imported successfully")
             return HttpResponseRedirect(reverse("recurring_expenses:import"))
+
+        # Duplicate keys in import row.
+
+        except IntegrityError:
+            messages.error(request, "Duplicate recurring expense found.")
+            return HttpResponseRedirect(reverse("recurring_expenses:import"))
+
         except Exception as e:
             messages.error(request, str(e))
             return HttpResponseRedirect(reverse("recurring_expenses:import"))
