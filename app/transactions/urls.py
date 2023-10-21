@@ -6,5 +6,5 @@ app_name = "transactions"
 urlpatterns = [
     path("stats", views.StatsView.as_view(), name="stats"),
     path("", views.IndexView.as_view(), name="index"),
-    path("import", views.upload, name="import"),
+    path("import", views.ImportView.as_view(), name="import"),
 ]

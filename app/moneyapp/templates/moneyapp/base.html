@@ -30,6 +30,7 @@
     <header>
         {% include "moneyapp/_nav.html" %}
 
+        <div class="container">
         {% if messages %}
         {% for message in messages %}
         {% if 'error' in message.tags %}
@@ -49,7 +50,7 @@
         {% endif %}
         {% endfor %}
         {% endif %}
-
+        </div>
     </header>
 
 
