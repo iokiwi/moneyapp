@@ -3,6 +3,8 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.utils.text import slugify
 from django.views import generic
+from django.views.generic.edit import FormView
+
 from django.db.models import Sum, Count, Avg
 from django.http import HttpResponseRedirect
 from django.db import IntegrityError
@@ -15,6 +17,8 @@ from django.contrib.auth.decorators import login_required
 from ofxparse import OfxParser
 
 from .models import Transaction
+from .forms import ImportForm
+
 from bank_accounts.models import BankAccount
 
 
@@ -84,55 +88,62 @@ class StatsView(LoginRequiredMixin, generic.ListView):
         )
 
 
-@login_required
-def upload(request):
-    if request.method == "GET":
-        return render(request, "transactions/import.html", {})
+def handle_uploaded_file(f):
+    ofx = OfxParser.parse(f)
 
-    if request.method == "POST":
-        if request.FILES.get("file") is None:
-            messages.error(request, "No file uploaded")
-            return HttpResponseRedirect(reverse("transactions:import"))
-
-        ofx = OfxParser.parse(request.FILES["file"])
-
-        try:
-            account = BankAccount.objects.get(account_id=ofx.account.account_id)
-        except BankAccount.DoesNotExist:
-            account = BankAccount(
-                account_id=ofx.account.account_id,
-                account_type=ofx.account.account_type,
-            )
-            account.save()
-
-        rows_imported = 0
-        skipped_rows = 0
-        for t in ofx.account.statement.transactions:
-            try:
-                transaction = Transaction(
-                    account=account,
-                    payee=t.payee,
-                    payee_slug=slugify(t.payee),
-                    transaction_type=t.type,
-                    date=t.date,
-                    user_date=t.user_date,
-                    amount=t.amount,
-                    transaction_id=t.id,
-                    memo=t.memo,
-                    sic=t.sic,
-                    mcc=t.mcc,
-                    checknum=t.checknum,
-                )
-                transaction.save()
-                rows_imported += 1
-            except IntegrityError:
-                skipped_rows += 1
-
-        messages.success(
-            request,
-            "{}/{} transactions imported. {} duplicate transactions skipped.".format(
-                rows_imported, len(ofx.account.statement.transactions), skipped_rows
-            ),
+    try:
+        account = BankAccount.objects.get(account_id=ofx.account.account_id)
+    except BankAccount.DoesNotExist:
+        account = BankAccount(
+            account_id=ofx.account.account_id,
+            account_type=ofx.account.account_type,
         )
+        account.save()
+
+    rows_imported = 0
+    rows_failed = 0
+    for t in ofx.account.statement.transactions:
+        try:
+            transaction = Transaction(
+                account=account,
+                payee=t.payee,
+                payee_slug=slugify(t.payee),
+                transaction_type=t.type,
+                date=t.date,
+                user_date=t.user_date,
+                amount=t.amount,
+                transaction_id=t.id,
+                memo=t.memo,
+                sic=t.sic,
+                mcc=t.mcc,
+                checknum=t.checknum,
+            )
+            transaction.save()
+            rows_imported += 1
+        except IntegrityError:
+            rows_failed += 1
+
+    rows_total = len(ofx.account.statement.transactions)
+
+    return (rows_imported, rows_total, rows_failed)
+
+
+class ImportView(LoginRequiredMixin, FormView):
+    template_name = "transactions/import.html"
+    form_class = ImportForm
+    success_url = "/transactions/import"
+
+    def form_valid(self, form):
+        if form.is_valid():
+            rows_imported, rows_total, rows_failed = handle_uploaded_file(
+                self.request.FILES["file"]
+            )
+            message = "{}/{} transactions imported. {} duplicate transactions skipped."
+            messages.success(
+                self.request,
+                message.format(rows_imported, rows_total, rows_failed),
+            )
+        else:
+            messages.error(self.request, "No file uploaded")
 
         return HttpResponseRedirect(reverse("transactions:import"))
