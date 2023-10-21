@@ -8,6 +8,8 @@ from django.http import HttpResponseRedirect
 from django.db import IntegrityError
 from django.contrib import messages
 from django.core.paginator import Paginator
+from django.db.models.functions import TruncWeek
+
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
@@ -36,6 +38,14 @@ class IndexView(LoginRequiredMixin, generic.TemplateView):
         if "account" in self.request.GET:
             transactions = transactions.filter(account__id=self.request.GET["account"])
 
+        # Group transactions by week and annotate with weekly total and count
+        weekly_transactions = (
+            transactions.annotate(week=TruncWeek("date"))
+            .values("week")
+            .annotate(total=Sum("amount"), count=Count("id"))
+            .order_by("-week")
+        )
+
         # Create a Paginator object with 25 items per page
         paginator = Paginator(transactions.order_by("-date"), 25)
 
@@ -54,6 +64,20 @@ class IndexView(LoginRequiredMixin, generic.TemplateView):
         )
 
         context["transactions"] = page_obj
+
+        # Weekly averages
+        weekly_totals = [t["total"] for t in weekly_transactions]
+        weekly_counts = [t["count"] for t in weekly_transactions]
+        weekly_averages = [
+            total / count if count > 0 else 0
+            for total, count in zip(weekly_totals, weekly_counts)
+        ]
+        context["weekly_averages"] = weekly_averages
+        # Calculate total average
+        total_weekly_average = (
+            sum(weekly_totals) / sum(weekly_counts) if sum(weekly_counts) > 0 else 0
+        )
+        context["total_weekly_average"] = total_weekly_average
 
         return context
 

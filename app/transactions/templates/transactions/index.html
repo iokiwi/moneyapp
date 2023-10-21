@@ -15,25 +15,30 @@
                     <th>Credit</th>
                     <th>Debit</th>
                     <th>Total</th>
+                    <th>Weekly Average</th>
                 </tr>
                 <tr>
                     <th>Net</th>
                     <td>$ {{ credit_stats.total|floatformat:2 }}</td>
                     <td>$ {{ debit_stats.total|floatformat:2 }}</td>
                     <td>$ {{ aggregate_stats.total|floatformat:2 }}</td>
+                    <td></td>
                 </tr>
                 <tr>
                     <th>Average</th>
                     <td>$ {{ credit_stats.mean|floatformat:2 }}</td>
                     <td>$ {{ debit_stats.mean|floatformat:2 }}</td>
                     <td>$ {{ aggregate_stats.mean|floatformat:2 }}</td>
+                    <td>$ {{ total_weekly_average|floatformat:2 }}</td>
                 </tr>
                 <tr>
                     <th>Count</th>
                     <td>{{ credit_stats.count }}</td>
                     <td>{{ debit_stats.count }}</td>
                     <td>{{ aggregate_stats.count }}</td>
+                    <td></td>
                 </tr>
+                
             </table>
         </div>
     </div>
