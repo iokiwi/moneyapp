@@ -13,6 +13,7 @@
         <a href="{% url 'recurring_expenses:new' %}" class="btn btn-success">Add New</a>
     </div>
     {% else %}
+
     <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
         <a href="{% url 'recurring_expenses:new' %}" class="btn btn-success">Add New</a>
 
@@ -30,13 +31,18 @@
             </ul>
         </div>
     </div>
+    <br><b>Totals (Active)</b> = <b>Daily:</b> $ {{ total_daily|floatformat:2 }}
+    <b>Monthly</b> $ {{ total_monthly|floatformat:2 }}
+    <b>Yearly</b> $ {{ total_yearly|floatformat:2 }}
+
     <table class="table">
         <tr>
             <!-- <th>Active</th> -->
             <th>Particulars</th>
             <th>Amount</th>
             <th>Currency</th>
-            <th>Amount NZD</th>
+            <th>NZD / Month</th>
+            <th>NZD / Year</th>
             <th>Period (Months)</th>
             <th></th>
             <th></th>
@@ -51,7 +57,9 @@
             <td>{{ expense.particulars }}</td>
             <td>{{ expense.amount|floatformat:2 }}</td>
             <td>{{ expense.currency }}</td>
-            <td>{{ expense.amount_nzd|floatformat:2 }}</td>
+            <td>{{ expense.monthly_impact|floatformat:2 }}</td>
+            <td>{{ expense.yearly_impact|floatformat:2 }}</td>
+            <!-- <td>{{ expense.amount_nzd|floatformat:2 }}</td> -->
             <td>{{ expense.period }}</td>
 
             <td>

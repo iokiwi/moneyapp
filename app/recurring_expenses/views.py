@@ -25,28 +25,10 @@ EXPORT_FORMATS = [
     "json",
 ]
 
-
-@login_required
-def delete_recurring_expense(request, expense_id):
-    recurring_expense = RecurringExpense.objects.get(pk=expense_id)
-    recurring_expense.delete()
-    return HttpResponseRedirect(reverse("recurring_expenses:index"))
-
-
-@login_required
-def create_or_edit_recurring_expense(request, expense_id=None):
-    if expense_id is None:
-        create_recurring_expense(request)
-    else:
-        edit_recurring_expense(request, expense_id=expense_id)
-
-
-IMPORT_CONTENT_KEYS = {
+IMPORT_CONTENT_TYPES = {
     "json": "application/json",
     "csv": "text/csv",
 }
-
-IMPORT_CONTENT_TYPES = {value: key for key, value in IMPORT_CONTENT_KEYS.items()}
 
 
 def load_json_data(file):
@@ -64,11 +46,11 @@ def load_csv_data(file):
         raise ValueError("Invalid CSV data in the file.")
 
 
-def upload_json_data(data: dict):
+def import_json_data(data: dict):
     for item in data:
         try:
             recurring_expense = RecurringExpense(
-                id=item.get("id", None),
+                id=item.get("id"),
                 active=item["active"],
                 particulars=item["particulars"],
                 amount=item["amount"],
@@ -80,8 +62,8 @@ def upload_json_data(data: dict):
             raise ValueError("Missing fields in the JSON data")
 
 
-def upload_csv_data(reader):
-    next(reader, None)
+def import_csv_data(reader):
+    next(reader, None)  # Skip header row
     rows_imported = 0
     total_rows = 0
 
@@ -91,14 +73,12 @@ def upload_csv_data(reader):
 
         total_rows += 1
 
-        # try:
         recurring_expense = RecurringExpense(
-            id=UUID(row[0]) if row[0] else None,
-            active=parse_bool(row[1]),
-            particulars=row[2].strip(" "),
-            amount=row[3].strip("$  "),
-            period=int(row[6]),
-            currency=row[4].strip(" "),
+            active=parse_bool(row[0]),
+            particulars=row[1].strip(),
+            amount=row[2].strip("$ "),
+            period=int(row[3]),
+            currency=row[4].strip(),
         )
         recurring_expense.save()
         rows_imported += 1
@@ -108,6 +88,7 @@ def upload_csv_data(reader):
 def import_recurring_expenses(request):
     if request.method == "GET":
         return render(request, "recurring_expenses/import.html", {})
+
     if request.method == "POST":
         try:
             uploaded_file = request.FILES.get("file")
@@ -116,16 +97,16 @@ def import_recurring_expenses(request):
                 messages.error(request, "No file uploaded")
                 return HttpResponseRedirect(reverse("recurring_expenses:import"))
 
-            if uploaded_file.content_type not in IMPORT_CONTENT_TYPES:
+            if uploaded_file.content_type not in IMPORT_CONTENT_TYPES.values():
                 messages.error(request, "Invalid file type")
                 return HttpResponseRedirect(reverse("recurring_expenses:import"))
 
-            if uploaded_file.content_type == IMPORT_CONTENT_KEYS["json"]:
+            if uploaded_file.content_type == IMPORT_CONTENT_TYPES["json"]:
                 data = load_json_data(uploaded_file)
-                upload_json_data(data)
-            elif uploaded_file.content_type == IMPORT_CONTENT_KEYS["csv"]:
+                import_json_data(data)
+            elif uploaded_file.content_type == IMPORT_CONTENT_TYPES["csv"]:
                 reader = load_csv_data(uploaded_file)
-                upload_csv_data(reader)
+                import_csv_data(reader)
 
             # Redirect to a success page or do something else
             messages.success(request, "Recurring expenses imported successfully")
@@ -140,6 +121,13 @@ def import_recurring_expenses(request):
         except Exception as e:
             messages.error(request, str(e))
             return HttpResponseRedirect(reverse("recurring_expenses:import"))
+
+
+@login_required
+def delete_recurring_expense(request, expense_id):
+    recurring_expense = RecurringExpense.objects.get(pk=expense_id)
+    recurring_expense.delete()
+    return HttpResponseRedirect(reverse("recurring_expenses:index"))
 
 
 @login_required
@@ -259,10 +247,31 @@ class IndexView(LoginRequiredMixin, generic.TemplateView):
         context = super().get_context_data(**kwargs)
         expenses = RecurringExpense.objects.all()
 
-        for expense in expenses:
-            print(expense.amount_nzd)
+        expenses = reversed(
+            sorted(expenses, key=lambda expense: expense.monthly_impact)
+        )
 
-        context["recurring_expenses"] = expenses
+        total_daily = 0
+        total_monthly = 0
+        total_yearly = 0
+
+        active = []
+        inactive = []
+
+        for expense in expenses:
+            if not expense.active:
+                inactive.append(expense)
+            else:
+                active.append(expense)
+                total_daily += expense.daily_impact
+                total_monthly += expense.monthly_impact
+                total_yearly += expense.yearly_impact
+
+        context["total_daily"] = total_daily
+        context["total_monthly"] = total_monthly
+        context["total_yearly"] = total_yearly
+
+        context["recurring_expenses"] = active + inactive
         context["export_formats"] = EXPORT_FORMATS
         return context
 
@@ -283,10 +292,9 @@ class CreateView(LoginRequiredMixin, View):
         return render(request, "recurring_expenses/new.html")
 
     def post(self, request, *args, **kwargs):
-        print(request.POST)
         try:
             recurring_expense = RecurringExpense(
-                # active = request.POST["active"],
+                active=request.POST["active"],
                 particulars=request.POST["particulars"],
                 currency=request.POST["currency"],
                 amount=request.POST["amount"],

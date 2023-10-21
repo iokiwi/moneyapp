@@ -3,7 +3,6 @@ import requests
 from django.db import models
 from uuid import uuid4
 from bank_accounts.models import BankAccount
-from moneyapp.helpers import parse_bool
 from memoize import memoize
 
 
@@ -59,6 +58,18 @@ class RecurringExpense(models.Model):
     def amount_nzd(self):
         fx_rate = get_exchange_rate(self.currency)
         return float(self.amount) * fx_rate
+
+    @property
+    def yearly_impact(self):
+        return 12 / self.period * self.amount_nzd
+
+    @property
+    def monthly_impact(self):
+        return self.yearly_impact / 12
+
+    @property
+    def daily_impact(self):
+        return self.yearly_impact / 365.24
 
     def __str__(self):
         return "RecurringExpense({})".format(
