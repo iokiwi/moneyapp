@@ -62,24 +62,21 @@ class IndexView(LoginRequiredMixin, generic.TemplateView):
         context["credit_stats"] = self.get_transaction_stats(
             [t for t in transactions if t.amount > 0]
         )
+        context["weekly_stats"] = self.get_weekly_transaction_stats(weekly_transactions)
 
         context["transactions"] = page_obj
 
-        # Weekly averages
-        weekly_totals = [t["total"] for t in weekly_transactions]
-        weekly_counts = [t["count"] for t in weekly_transactions]
-        weekly_averages = [
-            total / count if count > 0 else 0
-            for total, count in zip(weekly_totals, weekly_counts)
-        ]
-        context["weekly_averages"] = weekly_averages
-        # Calculate total average
-        total_weekly_average = (
-            sum(weekly_totals) / sum(weekly_counts) if sum(weekly_counts) > 0 else 0
-        )
-        context["total_weekly_average"] = total_weekly_average
-
         return context
+
+    def get_weekly_transaction_stats(self, transactions):
+        # Weekly averages
+        weekly_totals = [t["total"] for t in transactions]
+        weekly_counts = [t["count"] for t in transactions]
+        # Calculate total average
+        return {
+            "mean": sum(weekly_totals) / len(transactions),
+            "count": sum(weekly_counts) / len(transactions),
+        }
 
     def get_transaction_stats(self, transactions):
         if not transactions:
