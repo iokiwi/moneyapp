@@ -1,20 +1,18 @@
 {% extends "moneyapp/base.html" %}
 
-
 {% block content %}
 
 <div class="container">
-
+    <h1>Accounts</h1>
     <div class="row">
     {% if bank_accounts %}
         {% for account in bank_accounts %}
         <div class="col">
             <div class="card">
-                <!-- <img src="..." class="card-img-top" alt="..."> -->
                 <div class="card-body">
-                    <b><p class="card-text">{{ account.name }}</p></b>
-                    <p class="card-text">{{ account.description }}</p>
-                    <a class="btn btn-primary" href="{% url 'transactions:index' %}?account={{account.id|urlencode}}">Transactions</a>
+                    <a href="{% url 'transactions:index' %}?account={{account.id|urlencode}}"><p class="card-text">{{ account.name }}</p></a>
+                    <span class="card-text">{{ account.description }}</span>
+                    <a href="{% url 'transactions:index' %}?account={{account.id|urlencode}}"><span>View Transactions</span></a>
                 </div>
             </div>
         </div>

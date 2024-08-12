@@ -1,9 +1,10 @@
 FROM python:alpine
 
 COPY app /app
-COPY entrypoint.sh /entrypoint.sh
-
 WORKDIR /app
+
+COPY requirements.txt requirements.txt
+COPY entrypoint.sh /entrypoint.sh
 
 RUN apk update && \
     apk add --no-cache \

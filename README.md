@@ -4,7 +4,7 @@
 
 This is a semi serious app to try real world deployments of several technologies including Open Telemetry, HoneyComb, ECS and more.
 
-## Quickstart with Docker Dev Environment
+## Quick start with Docker Dev Environment
 
 Copy the default config files. There's no need to change anything just yet.
 
@@ -16,7 +16,7 @@ cp otel-collector-config.yaml.example otel-collector-config.yaml
 Run the application. If its your first time running the app it will take a couple of minutes while containers get downloaded and built
 
 ```bash
-docker-compose up
+docker compose up
 ```
 
 You should be able to access the following services in your browser.
@@ -35,7 +35,7 @@ You should be able to access the following services in your browser.
 Rebuild app container manually
 
 ```bash
-docker-compose build app
+docker compose build app
 ```
 
 ## Contributing
@@ -49,7 +49,7 @@ Its recommended to install both of on your local workstation and either run them
 have your IDE/editor run them automatically.
 
 ```bash
-pip install -r app/requirements-dev.txt
+pip install -r requirements-dev.txt
 ```
 
 ## Architecture

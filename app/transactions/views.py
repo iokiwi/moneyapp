@@ -42,14 +42,6 @@ class IndexView(LoginRequiredMixin, generic.TemplateView):
         if "account" in self.request.GET:
             transactions = transactions.filter(account__id=self.request.GET["account"])
 
-        # Group transactions by week and annotate with weekly total and count
-        weekly_transactions = (
-            transactions.annotate(week=TruncWeek("date"))
-            .values("week")
-            .annotate(total=Sum("amount"), count=Count("id"))
-            .order_by("-week")
-        )
-
         # Create a Paginator object with 25 items per page
         paginator = Paginator(transactions.order_by("-date"), 25)
 
@@ -66,19 +58,32 @@ class IndexView(LoginRequiredMixin, generic.TemplateView):
         context["credit_stats"] = self.get_transaction_stats(
             [t for t in transactions if t.amount > 0]
         )
-        context["weekly_stats"] = self.get_weekly_transaction_stats(weekly_transactions)
+
+        # # Group transactions by week and annotate with weekly total and count
+        # weekly_transactions = (
+        #     transactions.annotate(week=TruncWeek("date"))
+        #     .values("week")
+        #     .annotate(total=Sum("amount"), count=Count("id"))
+        #     .order_by("-week")
+        # )
+        # context["weekly_stats"] = self.get_weekly_transaction_stats(weekly_transactions)
 
         context["transactions"] = page_obj
 
         return context
 
     def get_weekly_transaction_stats(self, transactions):
-        # Weekly averages
+
         weekly_totals = [t["total"] for t in transactions]
         weekly_counts = [t["count"] for t in transactions]
-        # Calculate total average
+
+        try:
+            mean = sum(weekly_totals) / len(transactions)
+        except ZeroDivisionError as e:
+            mean = "N/A"
+
         return {
-            "mean": sum(weekly_totals) / len(transactions),
+            "mean": mean,
             "count": sum(weekly_counts) / len(transactions),
         }
 
@@ -90,23 +95,6 @@ class IndexView(LoginRequiredMixin, generic.TemplateView):
         mean = total / len(transactions)
         count = len(transactions)
         return {"total": total, "mean": mean, "count": count}
-
-
-class StatsView(LoginRequiredMixin, generic.ListView):
-    template_name = "transactions/stats.html"
-    context_object_name = "results"
-
-    def get_queryset(self):
-        return (
-            Transaction.objects.filter(transaction_type="debit")
-            .values("payee")
-            .annotate(
-                total_amount=Sum("amount"),
-                average_amount=Avg("amount"),
-                transaction_count=Count("payee"),
-            )
-            .order_by("total_amount")
-        )
 
 
 def handle_uploaded_file(f):
