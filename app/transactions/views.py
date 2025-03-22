@@ -66,7 +66,8 @@ class IndexView(LoginRequiredMixin, generic.TemplateView):
         #     .annotate(total=Sum("amount"), count=Count("id"))
         #     .order_by("-week")
         # )
-        # context["weekly_stats"] = self.get_weekly_transaction_stats(weekly_transactions)
+        # context["weekly_stats"] = self.get_weekly_transaction_stats(
+        #   weekly_transactions)
 
         context["transactions"] = page_obj
 
@@ -79,7 +80,7 @@ class IndexView(LoginRequiredMixin, generic.TemplateView):
 
         try:
             mean = sum(weekly_totals) / len(transactions)
-        except ZeroDivisionError as e:
+        except ZeroDivisionError:
             mean = "N/A"
 
         return {
