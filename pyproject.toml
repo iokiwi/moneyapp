@@ -1,0 +1,24 @@
+[project]
+name = "moneyapp"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "django-memoize>=2.3.1",
+    "django-sesame>=3.2.2",
+    "django>=5.1.7",
+    "gunicorn>=23.0.0",
+    "ofxparse>=0.21",
+    "opentelemetry-exporter-otlp-proto-grpc>=1.31.1",
+    "opentelemetry-instrumentation-django>=0.52b1",
+    "opentelemetry-sdk>=1.31.1",
+    "plotly>=6.0.0",
+    "python-dotenv>=1.0.1",
+    "requests>=2.32.3",
+]
+
+[tool.uv]
+dev-dependencies = [
+    "ruff>=0.11.2",
+]
