@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+from urllib.parse import urlparse
 
 load_dotenv()
 
@@ -37,7 +38,19 @@ DEBUG = bool(os.environ.get("DEBUG", False))
 
 # LOGIN_REDIRECT_URL = "/"
 
-ALLOWED_HOSTS = ["*"]
+# NOTE(simon): Should still function for cloud agnostic deployments but
+# maybe we want to put this off to the side somewhere and only include it for
+# GCP deploys
+CLOUDRUN_SERVICE_URLS = os.environ.get("CLOUDRUN_SERVICE_URLS", default=None)
+if CLOUDRUN_SERVICE_URLS:
+    CSRF_TRUSTED_ORIGINS = os.environ.get("CLOUDRUN_SERVICE_URLS").split(",")
+    # Remove the scheme from URLs for ALLOWED_HOSTS
+    ALLOWED_HOSTS = [urlparse(url).netloc for url in CSRF_TRUSTED_ORIGINS]
+
+    SECURE_SSL_REDIRECT = True
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+else:
+    ALLOWED_HOSTS = ["*"]
 
 # Application definition
 INSTALLED_APPS = [
@@ -97,23 +110,23 @@ WSGI_APPLICATION = "moneyapp.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.mysql",
-        "NAME": os.environ["DB_DATABASE"],
-        "USER": os.environ["DB_USERNAME"],
-        "PASSWORD": os.environ["DB_PASSWORD"],
-        "HOST": os.environ["DB_HOST"],
-        "PORT": os.environ["DB_PORT"],
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.mysql",
+#         "NAME": os.environ["DB_DATABASE"],
+#         "USER": os.environ["DB_USERNAME"],
+#         "PASSWORD": os.environ["DB_PASSWORD"],
+#         "HOST": os.environ["DB_HOST"],
+#         "PORT": os.environ["DB_PORT"],
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
