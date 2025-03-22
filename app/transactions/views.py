@@ -74,7 +74,6 @@ class IndexView(LoginRequiredMixin, generic.TemplateView):
         return context
 
     def get_weekly_transaction_stats(self, transactions):
-
         weekly_totals = [t["total"] for t in transactions]
         weekly_counts = [t["count"] for t in transactions]
 
