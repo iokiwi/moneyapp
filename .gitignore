@@ -1,4 +1,10 @@
+terraform.tfvars
 venv/
+.ruff_cache/
+.terraform
+terraform.tfstate
+terraform.tfstate.backup
+.terraform.lock.hcl
 *.ofx
 *.sqlite3
 __pycache__/
@@ -12,3 +18,5 @@ Export*.csv
 script.py
 .env
 .vscode/
+
+qwe
